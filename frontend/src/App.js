@@ -13,7 +13,7 @@ export default function App() {
 			<Container>
 				<main className="py-3">
 					<Route path="/" exact component={HomeScreen} />
-					<Route path="/product/:id" component={ProductScreen} />
+					<Route path="/product/:slug" component={ProductScreen} />
 				</main>
 			</Container>
 			<Footer />
