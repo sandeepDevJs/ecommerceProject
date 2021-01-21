@@ -1,5 +1,5 @@
 import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
 	Row,
 	Col,
@@ -10,40 +10,21 @@ import {
 	Button,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import {
-	CART_INCREMENT_ITEM_REQUEST,
-	CART_INCREMENT_ITEM_SUCCESS,
-	CART_INCREMENT_ITEM_FAILS,
-} from "../constants/cartConstant";
-import { incrementCart, listCart } from "../actions/cartAction";
-import Message from "./Message";
-import Loader from "./Loader";
+import { incrementCart, removeFromCart } from "../actions/cartAction";
 
 const CartProduct = ({ item }) => {
 	const dispatch = useDispatch();
 
-	const {
-		cartIncrementloading,
-		cartIncrement,
-		cartIncrementerror,
-	} = useSelector((state) => state.isCartIncrement);
-
 	const handleQtyButton = (op, pid) => {
-		dispatch({ type: CART_INCREMENT_ITEM_REQUEST });
 		if (op === "increment") {
 			dispatch(incrementCart(pid));
 		} else if (op === "decrement") {
 			dispatch(incrementCart(pid, "decrement"));
 		}
-
-		dispatch(listCart());
 	};
 
 	return (
 		<ListGroup.Item>
-			{cartIncrementerror && (
-				<Message variant="danger">{cartIncrementerror}</Message>
-			)}
 			<Row>
 				<Col md={2}>
 					<Image
@@ -59,7 +40,7 @@ const CartProduct = ({ item }) => {
 					</Link>
 				</Col>
 				<Col md={2}>${item.productId.pricing.price}</Col>
-				<Col md={3}>
+				<Col md={5}>
 					<Row>
 						<InputGroup className="mb-1">
 							<InputGroup.Prepend>
@@ -83,10 +64,18 @@ const CartProduct = ({ item }) => {
 									-
 								</Button>
 							</InputGroup.Append>
+							<InputGroup.Append>
+								<Button
+									variant="outline-secondary"
+									className="btn-danger"
+									onClick={() => dispatch(removeFromCart(item.productId._id))}
+								>
+									<i class="fas fa-trash"></i>
+								</Button>
+							</InputGroup.Append>
 						</InputGroup>
 					</Row>
 				</Col>
-				<Col md={2}>{cartIncrementloading && <Loader />}</Col>
 			</Row>
 		</ListGroup.Item>
 	);

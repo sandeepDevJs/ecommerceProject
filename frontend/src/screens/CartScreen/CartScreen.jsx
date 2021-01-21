@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { CartContext } from "../../contexts/cartContext";
-import { Row, Col, ListGroup } from "react-bootstrap";
+import { Row, Col, ListGroup, Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
@@ -14,12 +14,28 @@ const CartScreen = () => {
 
 	const { loading, cart, error } = cartData;
 
+	const { cartIncrementloading, cartIncrementerror } = useSelector(
+		(state) => state.isCartIncrement
+	);
+
+	const removeFromCartState = useSelector((state) => state.RemoveFromCart);
+
 	useEffect(() => {
 		dispatch(listCart());
 	}, [dispatch]);
 
 	return (
 		<>
+			{cartIncrementloading || removeFromCartState.loading ? (
+				<Loader width="50px" height="50px" />
+			) : cartIncrementerror || removeFromCartState.error ? (
+				<Message variant="danger">
+					{cartIncrementerror}
+					{removeFromCartState.error}
+				</Message>
+			) : (
+				""
+			)}
 			{loading ? (
 				<Loader />
 			) : error ? (
@@ -40,8 +56,39 @@ const CartScreen = () => {
 							</ListGroup>
 						)}
 					</Col>
-					<Col md={10}></Col>
-					<Col md={2}></Col>
+					<Col md={4}>
+						<Card>
+							<ListGroup variant="flush">
+								<ListGroup.Item>
+									<h2>
+										Subtotal{" "}
+										{cart.products.reduce(
+											(acc, item) => acc + item.quantity,
+											0
+										)}{" "}
+										items
+									</h2>
+									$
+									{cart.products
+										.reduce(
+											(acc, item) =>
+												acc + item.quantity * item.productId.pricing.price,
+											0
+										)
+										.toFixed(2)}
+								</ListGroup.Item>
+								<ListGroup.Item>
+									<Button
+										type="button"
+										className="btn-block"
+										disabled={cart.products.length === 0}
+									>
+										Proceed To CheckOut
+									</Button>
+								</ListGroup.Item>
+							</ListGroup>
+						</Card>
+					</Col>
 				</Row>
 			)}
 		</>

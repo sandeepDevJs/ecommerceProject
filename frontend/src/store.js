@@ -7,13 +7,20 @@ import {
 	productDetailsReducer,
 } from "./reducers/productReducer";
 
-import { cartListReducer, cartIncrementReducer } from "./reducers/cartReducers";
+import {
+	cartListReducer,
+	cartIncrementReducer,
+	AddToCartReducer,
+	removeFromCartReducer,
+} from "./reducers/cartReducers";
 
 const reducer = combineReducers({
 	productList: productListReducer,
 	productDetails: productDetailsReducer,
 	cartList: cartListReducer,
 	isCartIncrement: cartIncrementReducer,
+	AddToCart: AddToCartReducer,
+	RemoveFromCart: removeFromCartReducer,
 });
 
 const initialState = {};

@@ -3,23 +3,38 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Row, Col, Image, ListGroup, Card, Button } from "react-bootstrap";
 import { listProductDetails } from "../actions/productActions";
+import { AddToCart } from "../actions/cartAction";
 import Rating from "../components/Rating";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
-const ProductScreen = ({ history, match }) => {
+const ProductScreen = ({ match }) => {
 	const dispatch = useDispatch();
 	const [qty, setQty] = useState(1);
+	const [addToCartState, setCartState] = useState({});
 
 	const productDetails = useSelector((state) => state.productDetails);
 	const { loading, error, product } = productDetails;
+	const cartState = useSelector((state) => state.AddToCart);
 
 	useEffect(() => {
 		dispatch(listProductDetails(match.params.slug));
 	}, [dispatch, match.params.slug]);
 
-	const addToCartHandler = () => {
-		history.push(`/cart/${match.params.slug}?quantity=${qty}`);
+	const addToCartHandler = (pid) => {
+		dispatch(AddToCart(pid, qty));
+		setCartState(cartState);
+	};
+
+	const allCartProducts = useSelector((state) => state.cartList);
+
+	const isInCart = (pid) => {
+		if (!allCartProducts.cart) {
+			return false;
+		}
+		let listOfCartProduct = allCartProducts.cart.products;
+		console.log(listOfCartProduct);
+		return listOfCartProduct.some((item) => item.productId._id === pid);
 	};
 
 	return (
@@ -94,14 +109,32 @@ const ProductScreen = ({ history, match }) => {
 								)}
 
 								<ListGroup.Item>
-									<Button
-										onClick={addToCartHandler}
-										className="btn-block"
-										type="button"
-										disabled={product.quantity === 0}
-									>
-										Add To Cart
-									</Button>
+									{addToCartState.error && (
+										<Message variant="danger">{addToCartState.error}</Message>
+									)}
+
+									{isInCart(product._id) ? (
+										<Button className="btn-block" type="button">
+											<i class="fas fa-check"></i>
+										</Button>
+									) : addToCartState.loading ? (
+										<Button className="btn-block" type="button">
+											<Loader />
+										</Button>
+									) : addToCartState.isAdded ? (
+										<Button className="btn-block" type="button">
+											<i class="fas fa-check"></i>
+										</Button>
+									) : (
+										<Button
+											onClick={() => addToCartHandler(product._id)}
+											className="btn-block"
+											type="button"
+											disabled={product.quantity === 0}
+										>
+											Add To Cart
+										</Button>
+									)}
 								</ListGroup.Item>
 							</ListGroup>
 						</Card>

@@ -5,6 +5,12 @@ import {
 	CART_INCREMENT_ITEM_FAILS,
 	CART_INCREMENT_ITEM_REQUEST,
 	CART_INCREMENT_ITEM_SUCCESS,
+	CART_ADD_ITEM_FAILS,
+	CART_ADD_ITEM_REQUEST,
+	CART_ADD_ITEM_SUCCESS,
+	CART_REMOVE_ITEM_FAILS,
+	CART_REMOVE_ITEM_REQUEST,
+	CART_REMOVE_ITEM_SUCCESS,
 } from "../constants/cartConstant";
 
 let initStateForDetails = {
@@ -59,6 +65,38 @@ export const cartIncrementReducer = (
 				cartIncrementloading: false,
 				cartIncrementerror: action.payload,
 			};
+
+		default:
+			return state;
+	}
+};
+
+export const AddToCartReducer = (state = { isAdded: false }, action) => {
+	switch (action.type) {
+		case CART_ADD_ITEM_REQUEST:
+			return { loading: true, ...state };
+
+		case CART_ADD_ITEM_SUCCESS:
+			return { loading: false, isAdded: true };
+
+		case CART_ADD_ITEM_FAILS:
+			return { loading: false, isAdded: false, error: action.payload };
+
+		default:
+			return state;
+	}
+};
+
+export const removeFromCartReducer = (state = { isRemoved: false }, action) => {
+	switch (action.type) {
+		case CART_REMOVE_ITEM_REQUEST:
+			return { loading: true, ...state };
+
+		case CART_REMOVE_ITEM_SUCCESS:
+			return { loading: false, isRemoved: true };
+
+		case CART_REMOVE_ITEM_FAILS:
+			return { loading: false, isRemoved: false, error: action.payload };
 
 		default:
 			return state;
