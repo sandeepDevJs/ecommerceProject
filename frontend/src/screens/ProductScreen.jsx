@@ -33,7 +33,6 @@ const ProductScreen = ({ match }) => {
 			return false;
 		}
 		let listOfCartProduct = allCartProducts.cart.products;
-		console.log(listOfCartProduct);
 		return listOfCartProduct.some((item) => item.productId._id === pid);
 	};
 
@@ -123,7 +122,7 @@ const ProductScreen = ({ match }) => {
 										</Button>
 									) : addToCartState.isAdded ? (
 										<Button className="btn-block" type="button">
-											<i class="fas fa-check"></i>
+											<i className="fas fa-check"></i>
 										</Button>
 									) : (
 										<Button

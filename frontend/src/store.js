@@ -14,6 +14,8 @@ import {
 	removeFromCartReducer,
 } from "./reducers/cartReducers";
 
+import { userLoginReducer, userRegisterReducer } from "./reducers/userReducers";
+
 const reducer = combineReducers({
 	productList: productListReducer,
 	productDetails: productDetailsReducer,
@@ -21,6 +23,8 @@ const reducer = combineReducers({
 	isCartIncrement: cartIncrementReducer,
 	AddToCart: AddToCartReducer,
 	RemoveFromCart: removeFromCartReducer,
+	userLogin: userLoginReducer,
+	userRegister: userRegisterReducer,
 });
 
 const initialState = {};

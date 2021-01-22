@@ -70,7 +70,7 @@ const CartProduct = ({ item }) => {
 									className="btn-danger"
 									onClick={() => dispatch(removeFromCart(item.productId._id))}
 								>
-									<i class="fas fa-trash"></i>
+									<i className="fas fa-trash"></i>
 								</Button>
 							</InputGroup.Append>
 						</InputGroup>
