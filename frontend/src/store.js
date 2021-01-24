@@ -12,9 +12,15 @@ import {
 	cartIncrementReducer,
 	AddToCartReducer,
 	removeFromCartReducer,
+	shippingReducer,
 } from "./reducers/cartReducers";
 
-import { userLoginReducer, userRegisterReducer } from "./reducers/userReducers";
+import {
+	userLoginReducer,
+	userRegisterReducer,
+	userDetailsReducer,
+	userUpdateProfileReducer,
+} from "./reducers/userReducers";
 
 const reducer = combineReducers({
 	productList: productListReducer,
@@ -25,6 +31,9 @@ const reducer = combineReducers({
 	RemoveFromCart: removeFromCartReducer,
 	userLogin: userLoginReducer,
 	userRegister: userRegisterReducer,
+	userDetails: userDetailsReducer,
+	userUpdateProfile: userUpdateProfileReducer,
+	shippingDetails: shippingReducer,
 });
 
 const initialState = {};

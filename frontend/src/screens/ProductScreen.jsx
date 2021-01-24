@@ -114,7 +114,7 @@ const ProductScreen = ({ match }) => {
 
 									{isInCart(product._id) ? (
 										<Button className="btn-block" type="button">
-											<i class="fas fa-check"></i>
+											<i className="fas fa-check"></i>
 										</Button>
 									) : addToCartState.loading ? (
 										<Button className="btn-block" type="button">

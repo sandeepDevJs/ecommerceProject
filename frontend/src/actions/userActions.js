@@ -1,5 +1,8 @@
 import axios from "axios";
 import {
+	USER_DETAILS_FAILS,
+	USER_DETAILS_REQUEST,
+	USER_DETAILS_SUCCESS,
 	USER_LOGIN_FAILS,
 	USER_LOGIN_REQUEST,
 	USER_LOGIN_SUCCESS,
@@ -7,6 +10,10 @@ import {
 	USER_REGISTER_FAILS,
 	USER_REGISTER_REQUEST,
 	USER_REGISTER_SUCCESS,
+	USER_PROFILE_UPDATE_FAILS,
+	USER_PROFILE_UPDATE_REQUEST,
+	USER_PROFILE_UPDATE_SUCCESS,
+	USER_PROFILE_RESET,
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -81,6 +88,78 @@ export const register = (userData) => async (dispatch) => {
 	} catch (err) {
 		dispatch({
 			type: USER_REGISTER_FAILS,
+			payload:
+				err.response && err.response.data.message
+					? err.response.data.message
+					: err.message,
+		});
+	}
+};
+
+export const getUserDetails = () => async (dispatch, getState) => {
+	try {
+		dispatch({
+			type: USER_DETAILS_REQUEST,
+		});
+
+		const {
+			userLogin: { userInfo },
+		} = getState();
+
+		const config = {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${userInfo.token}`,
+			},
+		};
+
+		const { data } = await axios.get("http://localhost:4000/api/me", config);
+
+		dispatch({
+			type: USER_DETAILS_SUCCESS,
+			payload: data.data,
+		});
+	} catch (err) {
+		dispatch({
+			type: USER_DETAILS_FAILS,
+			payload:
+				err.response && err.response.data.message
+					? err.response.data.message
+					: err.message,
+		});
+	}
+};
+
+export const updateUserProfile = (userData) => async (dispatch, getState) => {
+	try {
+		dispatch({
+			type: USER_PROFILE_UPDATE_REQUEST,
+		});
+
+		const {
+			userLogin: { userInfo },
+		} = getState();
+
+		const config = {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${userInfo.token}`,
+			},
+		};
+
+		const { data } = await axios.put(
+			"http://localhost:4000/api/me",
+			{ ...userData },
+			config
+		);
+
+		dispatch({
+			type: USER_PROFILE_UPDATE_SUCCESS,
+			payload: data.data,
+		});
+	} catch (err) {
+		dispatch({
+			type: USER_PROFILE_UPDATE_FAILS,
 			payload:
 				err.response && err.response.data.message
 					? err.response.data.message

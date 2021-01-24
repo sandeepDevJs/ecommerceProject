@@ -2,13 +2,14 @@ import React, { useContext, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CartContext } from "../../contexts/cartContext";
 import { Row, Col, ListGroup, Card, Button } from "react-bootstrap";
+import { LinkContainer } from "react-router-bootstrap";
 import { Link } from "react-router-dom";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import CartProduct from "../../components/CartProduct";
 import { listCart } from "../../actions/cartAction";
 
-const CartScreen = () => {
+const CartScreen = ({ history }) => {
 	const cartData = useContext(CartContext);
 	const dispatch = useDispatch();
 
@@ -68,23 +69,18 @@ const CartScreen = () => {
 										)}{" "}
 										items
 									</h2>
-									$
-									{cart.products
-										.reduce(
-											(acc, item) =>
-												acc + item.quantity * item.productId.pricing.price,
-											0
-										)
-										.toFixed(2)}
+									${cart.total}
 								</ListGroup.Item>
 								<ListGroup.Item>
-									<Button
-										type="button"
-										className="btn-block"
-										disabled={cart.products.length === 0}
-									>
-										Proceed To CheckOut
-									</Button>
+									<LinkContainer to="/shipping">
+										<Button
+											type="button"
+											className="btn-block"
+											disabled={cart.products.length === 0}
+										>
+											Proceed To CheckOut
+										</Button>
+									</LinkContainer>
 								</ListGroup.Item>
 							</ListGroup>
 						</Card>

@@ -11,6 +11,8 @@ import {
 	CART_REMOVE_ITEM_FAILS,
 	CART_REMOVE_ITEM_REQUEST,
 	CART_REMOVE_ITEM_SUCCESS,
+	CART_SAVE_SHIPPING_ADDRESS,
+	CART_SAVE_PAYMENT_METHOD,
 } from "../constants/cartConstant";
 
 let initStateForDetails = {
@@ -29,8 +31,21 @@ let initStateForDetails = {
 	avgRating: 0,
 };
 
-export const initCartState = {
+const shippingAddressFromLocalStorage = localStorage.getItem("shippingAddress")
+	? JSON.parse(localStorage.getItem("shippingAddress"))
+	: {};
+
+const paymentMethodFromLocalStorage = localStorage.getItem("paymentMethod")
+	? JSON.parse(localStorage.getItem("paymentMethod"))
+	: {};
+
+const initCartState = {
 	products: [{ quantity: 0, productId: initStateForDetails }],
+};
+
+const initialShippingAdressDetails = {
+	shippingAddress: shippingAddressFromLocalStorage,
+	paymentMethod: paymentMethodFromLocalStorage,
 };
 
 export const cartListReducer = (state = { cart: initCartState }, action) => {
@@ -98,6 +113,21 @@ export const removeFromCartReducer = (state = { isRemoved: false }, action) => {
 		case CART_REMOVE_ITEM_FAILS:
 			return { loading: false, isRemoved: false, error: action.payload };
 
+		default:
+			return state;
+	}
+};
+
+export const shippingReducer = (
+	state = initialShippingAdressDetails,
+	action
+) => {
+	switch (action.type) {
+		case CART_SAVE_SHIPPING_ADDRESS:
+			return { shippingAddress: action.payload };
+
+		case CART_SAVE_PAYMENT_METHOD:
+			return { ...state, paymentMethod: action.payload };
 		default:
 			return state;
 	}
