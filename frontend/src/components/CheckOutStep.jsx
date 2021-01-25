@@ -1,5 +1,5 @@
 import React from "react";
-import { Stepper, Step, StepLabel, Button } from "@material-ui/core";
+import { Stepper, Step, StepLabel } from "@material-ui/core";
 
 const CheckOutStep = ({ activeStep }) => {
 	return (

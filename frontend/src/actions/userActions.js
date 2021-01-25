@@ -13,8 +13,9 @@ import {
 	USER_PROFILE_UPDATE_FAILS,
 	USER_PROFILE_UPDATE_REQUEST,
 	USER_PROFILE_UPDATE_SUCCESS,
-	USER_PROFILE_RESET,
 } from "../constants/userConstants";
+
+import { listCart } from "./cartAction";
 
 export const login = (email, password) => async (dispatch) => {
 	try {
@@ -39,6 +40,8 @@ export const login = (email, password) => async (dispatch) => {
 			payload: data.data,
 		});
 
+		dispatch(listCart());
+
 		localStorage.setItem("userInfo", JSON.stringify(data.data));
 	} catch (err) {
 		dispatch({
@@ -53,6 +56,7 @@ export const login = (email, password) => async (dispatch) => {
 
 export const logout = () => async (dispatch) => {
 	localStorage.removeItem("userInfo");
+	localStorage.removeItem("cartDetails");
 	dispatch({ type: USER_LOGOUT });
 };
 

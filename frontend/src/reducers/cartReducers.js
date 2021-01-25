@@ -15,22 +15,6 @@ import {
 	CART_SAVE_PAYMENT_METHOD,
 } from "../constants/cartConstant";
 
-let initStateForDetails = {
-	_id: "6",
-	name: "Amazon Echo Dot 3rd Generation",
-	image: "/images/alexa.jpg",
-	description:
-		"Meet Echo Dot - Our most popular smart speaker with a fabric design. It is our most compact smart speaker that fits perfectly into small space",
-	brand: "Amazon",
-	category: "Electronics",
-	pricing: {
-		price: 29.99,
-	},
-	countInStock: 0,
-	rating: 4,
-	avgRating: 0,
-};
-
 const shippingAddressFromLocalStorage = localStorage.getItem("shippingAddress")
 	? JSON.parse(localStorage.getItem("shippingAddress"))
 	: {};
@@ -39,46 +23,43 @@ const paymentMethodFromLocalStorage = localStorage.getItem("paymentMethod")
 	? JSON.parse(localStorage.getItem("paymentMethod"))
 	: {};
 
-const initCartState = {
-	products: [{ quantity: 0, productId: initStateForDetails }],
-};
+const cartDetailsFromLocalStorage = localStorage.getItem("cartDetails")
+	? JSON.parse(localStorage.getItem("cartDetails"))
+	: { products: [], total: 0 };
 
 const initialShippingAdressDetails = {
 	shippingAddress: shippingAddressFromLocalStorage,
 	paymentMethod: paymentMethodFromLocalStorage,
 };
 
-export const cartListReducer = (state = { cart: initCartState }, action) => {
+export const cartListReducer = (
+	state = { cart: cartDetailsFromLocalStorage },
+	action
+) => {
 	switch (action.type) {
 		case CART_LIST_ITEM_REQUEST:
-			return { loading: true, ...state };
+			return { loading: true };
 
 		case CART_LIST_ITEM_SUCCESS:
 			return { loading: false, cart: action.payload };
 
 		case CART_LIST_ITEM_FAILS:
-			return { loading: false, error: action.payload };
+			return { ...state, loading: false, error: action.payload };
 
-		default:
-			return state;
-	}
-};
-
-export const cartIncrementReducer = (
-	state = { cartIncrement: null },
-	action
-) => {
-	switch (action.type) {
 		case CART_INCREMENT_ITEM_REQUEST:
-			return { cartIncrementloading: true, ...state };
+			return { loading: true, ...state };
 
 		case CART_INCREMENT_ITEM_SUCCESS:
-			return { cartIncrementloading: false, cartIncrement: true };
+			return {
+				loading: false,
+				...state,
+			};
 
 		case CART_INCREMENT_ITEM_FAILS:
 			return {
-				cartIncrementloading: false,
-				cartIncrementerror: action.payload,
+				loading: false,
+				error: action.payload,
+				...state,
 			};
 
 		default:

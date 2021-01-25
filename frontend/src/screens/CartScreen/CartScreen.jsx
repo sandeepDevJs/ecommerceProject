@@ -9,17 +9,11 @@ import Loader from "../../components/Loader";
 import CartProduct from "../../components/CartProduct";
 import { listCart } from "../../actions/cartAction";
 
-const CartScreen = ({ history }) => {
+const CartScreen = () => {
 	const cartData = useContext(CartContext);
 	const dispatch = useDispatch();
 
 	const { loading, cart, error } = cartData;
-
-	const { cartIncrementloading, cartIncrementerror } = useSelector(
-		(state) => state.isCartIncrement
-	);
-
-	const removeFromCartState = useSelector((state) => state.RemoveFromCart);
 
 	useEffect(() => {
 		dispatch(listCart());
@@ -27,21 +21,10 @@ const CartScreen = ({ history }) => {
 
 	return (
 		<>
-			{cartIncrementloading || removeFromCartState.loading ? (
-				<Loader width="50px" height="50px" />
-			) : cartIncrementerror || removeFromCartState.error ? (
-				<Message variant="danger">
-					{cartIncrementerror}
-					{removeFromCartState.error}
-				</Message>
-			) : (
-				""
-			)}
-			{loading ? (
-				<Loader />
-			) : error ? (
+			{loading && <Loader />}
+			{error ? (
 				<Message variant="danger">{error}</Message>
-			) : (
+			) : cart ? (
 				<Row>
 					<Col md={8}>
 						<h1>Shopping Cart</h1>
@@ -86,6 +69,8 @@ const CartScreen = ({ history }) => {
 						</Card>
 					</Col>
 				</Row>
+			) : (
+				""
 			)}
 		</>
 	);

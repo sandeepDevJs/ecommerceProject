@@ -9,7 +9,6 @@ import {
 
 import {
 	cartListReducer,
-	cartIncrementReducer,
 	AddToCartReducer,
 	removeFromCartReducer,
 	shippingReducer,
@@ -22,11 +21,15 @@ import {
 	userUpdateProfileReducer,
 } from "./reducers/userReducers";
 
+import {
+	orderCreateReducer,
+	orderDetailsReducer,
+} from "./reducers/orderReducers";
+
 const reducer = combineReducers({
 	productList: productListReducer,
 	productDetails: productDetailsReducer,
 	cartList: cartListReducer,
-	isCartIncrement: cartIncrementReducer,
 	AddToCart: AddToCartReducer,
 	RemoveFromCart: removeFromCartReducer,
 	userLogin: userLoginReducer,
@@ -34,6 +37,8 @@ const reducer = combineReducers({
 	userDetails: userDetailsReducer,
 	userUpdateProfile: userUpdateProfileReducer,
 	shippingDetails: shippingReducer,
+	orderCreate: orderCreateReducer,
+	orderDetails: orderDetailsReducer,
 });
 
 const initialState = {};

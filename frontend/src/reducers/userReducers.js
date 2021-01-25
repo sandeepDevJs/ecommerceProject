@@ -12,7 +12,6 @@ import {
 	USER_PROFILE_UPDATE_FAILS,
 	USER_PROFILE_UPDATE_REQUEST,
 	USER_PROFILE_UPDATE_SUCCESS,
-	USER_PROFILE_RESET,
 } from "../constants/userConstants";
 
 const userInfoFromLocalStorage = localStorage.getItem("userInfo")

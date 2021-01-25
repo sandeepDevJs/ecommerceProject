@@ -24,10 +24,17 @@ export const listCart = () => async (dispatch) => {
 				Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmZDk4ZWYwZjdjY2M4MThiODAxZTM3MyIsImVtYWlsIjoiYWJjeHl6QGdtYWlsLmNvbSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTYxMTIyODAxM30.6G-cvpbLnxDjVjC6ZyUYslU249Wf5BVTLgfF9a4CB04`,
 			},
 		});
+
+		if (!data.data || data.data === null) {
+			throw Error("Empty Cart");
+		}
+
 		dispatch({
 			type: CART_LIST_ITEM_SUCCESS,
 			payload: data.data,
 		});
+
+		localStorage.setItem("cartDetails", JSON.stringify(data.data));
 	} catch (err) {
 		dispatch({
 			type: CART_LIST_ITEM_FAILS,
@@ -93,6 +100,7 @@ export const AddToCart = (productId, qty = 1) => async (dispatch) => {
 		);
 
 		dispatch({ type: CART_ADD_ITEM_SUCCESS });
+		dispatch(listCart());
 	} catch (err) {
 		dispatch({
 			type: CART_ADD_ITEM_FAILS,

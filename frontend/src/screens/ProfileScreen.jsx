@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import { Form, Row, Col, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { getUserDetails, updateUserProfile } from "../actions/userActions";
 
-const ProfileScreen = ({ location, history }) => {
+const ProfileScreen = ({ history }) => {
 	const [email, setEmail] = useState("");
 	const [name, setName] = useState("");
 	const [address, setAddress] = useState("");
@@ -17,21 +16,15 @@ const ProfileScreen = ({ location, history }) => {
 
 	const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
 
-	const userLoginInfo = useSelector((state) => state.userLogin);
-
 	useEffect(() => {
-		if (!userLoginInfo.userInfo) {
-			history.push("/login");
+		if (!user.name) {
+			dispatch(getUserDetails());
 		} else {
-			if (!user.name) {
-				dispatch(getUserDetails());
-			} else {
-				setName(user.name);
-				setEmail(user.email);
-				setAddress(user.address);
-			}
+			setName(user.name);
+			setEmail(user.email);
+			setAddress(user.address);
 		}
-	}, [dispatch, history, userLoginInfo, user]);
+	}, [dispatch, user]);
 
 	const onSubmitHandler = (e) => {
 		e.preventDefault();
