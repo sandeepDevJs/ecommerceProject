@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { CartContext } from "../../contexts/cartContext";
 import { Row, Col, ListGroup, Card, Button } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";

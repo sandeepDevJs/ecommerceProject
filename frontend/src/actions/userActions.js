@@ -13,7 +13,10 @@ import {
 	USER_PROFILE_UPDATE_FAILS,
 	USER_PROFILE_UPDATE_REQUEST,
 	USER_PROFILE_UPDATE_SUCCESS,
+	USER_DETAILS_RESET,
 } from "../constants/userConstants";
+
+import { ORDER_LIST_MY_RESET } from "../constants/orderConstant";
 
 import { listCart } from "./cartAction";
 
@@ -58,6 +61,8 @@ export const logout = () => async (dispatch) => {
 	localStorage.removeItem("userInfo");
 	localStorage.removeItem("cartDetails");
 	dispatch({ type: USER_LOGOUT });
+	dispatch({ type: USER_DETAILS_RESET });
+	dispatch({ type: ORDER_LIST_MY_RESET });
 };
 
 export const register = (userData) => async (dispatch) => {

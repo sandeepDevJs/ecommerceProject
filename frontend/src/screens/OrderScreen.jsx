@@ -1,20 +1,23 @@
 import React, { useEffect } from "react";
-import { Row, Col, Image, Card, ListGroup } from "react-bootstrap";
+import { Row, Col, Image, Card, ListGroup, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getOrderDetails } from "../actions/orderActions";
+import { getOrderDetails, payOrder } from "../actions/orderActions";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
-const OrderScreen = () => {
+const OrderScreen = ({ match }) => {
 	const dispatch = useDispatch();
 	const { order, loading, error } = useSelector((state) => state.orderDetails);
+	const { loading: payLoading } = useSelector((state) => state.orderPay);
 
 	useEffect(() => {
-		dispatch(getOrderDetails());
-	}, [dispatch]);
+		dispatch(getOrderDetails(match.params.id));
+	}, [dispatch, match.params.id]);
 
-	console.log(order);
+	const payOrederHandler = () => {
+		dispatch(payOrder(match.params.id));
+	};
 
 	return loading ? (
 		<Loader />
@@ -59,7 +62,7 @@ const OrderScreen = () => {
 								{order.paymentMethod}
 							</p>
 							{order.isPaid ? (
-								<Message variant="suceess">Paid At {order.paidAt}</Message>
+								<Message variant="success">Paid At {order.paidAt}</Message>
 							) : (
 								<Message variant="danger">Not Paid!</Message>
 							)}
@@ -130,14 +133,24 @@ const OrderScreen = () => {
 								</Row>
 							</ListGroup.Item>
 							<ListGroup.Item>
-								{/* <Button
-									type="button"
-									className="btn-block"
-									disabled={order.products.length === 0}
-									onClick={palceOrederHandler}
-								>
-									Place Order
-								</Button> */}
+								{order.isPaid ? (
+									<Button type="button" className="btn-block" disabled>
+										Paid At {order.paidAt}
+									</Button>
+								) : payLoading ? (
+									<Button type="button" className="btn-block">
+										<Loader />
+									</Button>
+								) : (
+									<Button
+										type="button"
+										className="btn-block"
+										disabled={order.products.length === 0}
+										onClick={payOrederHandler}
+									>
+										Pay
+									</Button>
+								)}
 							</ListGroup.Item>
 						</ListGroup>
 					</Card>

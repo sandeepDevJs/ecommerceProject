@@ -12,6 +12,7 @@ import {
 	USER_PROFILE_UPDATE_FAILS,
 	USER_PROFILE_UPDATE_REQUEST,
 	USER_PROFILE_UPDATE_SUCCESS,
+	USER_DETAILS_RESET,
 } from "../constants/userConstants";
 
 const userInfoFromLocalStorage = localStorage.getItem("userInfo")
@@ -66,6 +67,8 @@ export const userDetailsReducer = (state = { user: {} }, action) => {
 		case USER_DETAILS_FAILS:
 			return { loading: false, error: action.payload };
 
+		case USER_DETAILS_RESET:
+			return {};
 		default:
 			return state;
 	}

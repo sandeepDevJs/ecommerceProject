@@ -21,7 +21,7 @@ export default function App() {
 			<Container>
 				<main className="py-3">
 					<Route path="/shipping" component={ShippingScreen} />
-					<Route path="/order" component={OrderScreen} />
+					<Route path="/order/:id" component={OrderScreen} />
 					<Route path="/payment" component={PaymentScreen} />
 					<Route path="/placeorder" component={PlaceOrderScreen} />
 					<Route path="/login" component={LoginScreen} />

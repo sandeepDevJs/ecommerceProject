@@ -31,7 +31,7 @@ const PlaceOrderScreen = ({ history }) => {
 
 	useEffect(() => {
 		if (success) {
-			history.push(`/order`);
+			history.push(`/order/${order._id}`);
 		}
 	}, [history, success, order]);
 
