@@ -123,11 +123,9 @@ export const payOrder = (orderId) => async (dispatch, getState) => {
 			payload: data.data,
 		});
 
-		dispatch(getOrderDetails(orderId));
-
-		dispatch({ type: ORDER_PAY_RESET });
-
 		dispatch({ type: ORDER_CREATE_RESET });
+		dispatch({ type: ORDER_PAY_RESET });
+		dispatch(getOrderDetails(orderId));
 	} catch (err) {
 		dispatch({
 			type: ORDER_PAY_FAILS,

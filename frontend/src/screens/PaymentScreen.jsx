@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Form, Button, Col } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { savePaymentMethod } from "../actions/cartAction";
@@ -7,10 +7,6 @@ import CheckOutStep from "../components/CheckOutStep";
 
 const PaymentScreen = ({ history }) => {
 	const { shippingAddress } = useSelector((state) => state.shippingDetails);
-
-	if (!shippingAddress) {
-		history.push("/shipping");
-	}
 
 	const [paymentMethod, setPaymentMethod] = useState("PayPal");
 
@@ -21,6 +17,13 @@ const PaymentScreen = ({ history }) => {
 		dispatch(savePaymentMethod(paymentMethod));
 		history.push("/placeorder");
 	};
+
+	useEffect(() => {
+		if (!shippingAddress) {
+			history.push("/shipping");
+		}
+	}, [history, shippingAddress]);
+
 	return (
 		<FromContainer>
 			<CheckOutStep activeStep={1} />
