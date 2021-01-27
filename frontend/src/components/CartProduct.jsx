@@ -23,8 +23,13 @@ const CartProduct = ({ item }) => {
 		}
 	};
 
+	const removeFromCartHandler = (e) => {
+		e.preventDefault();
+		dispatch(removeFromCart(item.productId._id));
+	};
+
 	return (
-		<ListGroup.Item>
+		<ListGroup.Item key={item._id}>
 			<Row>
 				<Col md={2}>
 					<Image
@@ -68,7 +73,7 @@ const CartProduct = ({ item }) => {
 								<Button
 									variant="outline-secondary"
 									className="btn-danger"
-									onClick={() => dispatch(removeFromCart(item.productId._id))}
+									onClick={removeFromCartHandler}
 								>
 									<i className="fas fa-trash"></i>
 								</Button>

@@ -3,17 +3,23 @@ import { Row, Col, Image, Card, ListGroup, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getOrderDetails, payOrder } from "../actions/orderActions";
+import { ORDER_PAY_RESET } from "../constants/orderConstant";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 
 const OrderScreen = ({ match }) => {
 	const dispatch = useDispatch();
 	const { order, loading, error } = useSelector((state) => state.orderDetails);
-	const { loading: payLoading } = useSelector((state) => state.orderPay);
+	const { loading: payLoading, success: paySuccess } = useSelector(
+		(state) => state.orderPay
+	);
 
 	useEffect(() => {
+		if (paySuccess) {
+			dispatch({ type: ORDER_PAY_RESET });
+		}
 		dispatch(getOrderDetails(match.params.id));
-	}, [dispatch, match.params.id]);
+	}, [dispatch, match, paySuccess]);
 
 	const payOrederHandler = () => {
 		dispatch(payOrder(match.params.id));

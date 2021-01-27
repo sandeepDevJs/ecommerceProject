@@ -112,20 +112,15 @@ export const payOrder = (orderId) => async (dispatch, getState) => {
 			},
 		};
 
-		const { data } = await axios.put(
+		await axios.put(
 			`http://localhost:4000/api/order/${orderId}/pay`,
 			{},
 			config
 		);
 
-		dispatch({
-			type: ORDER_PAY_SUCCESS,
-			payload: data.data,
-		});
-
+		dispatch({ type: ORDER_PAY_SUCCESS });
 		dispatch({ type: ORDER_CREATE_RESET });
-		dispatch({ type: ORDER_PAY_RESET });
-		dispatch(getOrderDetails(orderId));
+		localStorage.removeItem("orderCreate");
 	} catch (err) {
 		dispatch({
 			type: ORDER_PAY_FAILS,

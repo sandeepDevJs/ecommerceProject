@@ -13,6 +13,9 @@ import {
 	CART_REMOVE_ITEM_SUCCESS,
 	CART_SAVE_SHIPPING_ADDRESS,
 	CART_SAVE_PAYMENT_METHOD,
+	CART_INCREMENT_ITEM_RESET,
+	CART_REMOVE_ITEM_RESET,
+	CART_ADD_ITEM_RESET,
 } from "../constants/cartConstant";
 
 const shippingAddressFromLocalStorage = localStorage.getItem("shippingAddress")
@@ -46,37 +49,49 @@ export const cartListReducer = (
 		case CART_LIST_ITEM_FAILS:
 			return { ...state, loading: false, error: action.payload };
 
+		default:
+			return state;
+	}
+};
+
+export const incrementCartReducer = (state = {}, action) => {
+	switch (action.type) {
 		case CART_INCREMENT_ITEM_REQUEST:
-			return { loading: true, ...state };
+			return { loading: true };
 
 		case CART_INCREMENT_ITEM_SUCCESS:
 			return {
 				loading: false,
-				...state,
+				success: true,
 			};
 
 		case CART_INCREMENT_ITEM_FAILS:
 			return {
 				loading: false,
 				error: action.payload,
-				...state,
 			};
+
+		case CART_INCREMENT_ITEM_RESET:
+			return {};
 
 		default:
 			return state;
 	}
 };
 
-export const AddToCartReducer = (state = { isAdded: false }, action) => {
+export const AddToCartReducer = (state = {}, action) => {
 	switch (action.type) {
 		case CART_ADD_ITEM_REQUEST:
-			return { loading: true, ...state };
+			return { loading: true };
 
 		case CART_ADD_ITEM_SUCCESS:
 			return { loading: false, isAdded: true };
 
 		case CART_ADD_ITEM_FAILS:
-			return { loading: false, isAdded: false, error: action.payload };
+			return { loading: false, error: action.payload };
+
+		case CART_ADD_ITEM_RESET:
+			return {};
 
 		default:
 			return state;
@@ -92,6 +107,9 @@ export const removeFromCartReducer = (state = { isRemoved: false }, action) => {
 			return { loading: false, isRemoved: true };
 
 		case CART_REMOVE_ITEM_FAILS:
+			return { loading: false, isRemoved: false, error: action.payload };
+
+		case CART_REMOVE_ITEM_RESET:
 			return { loading: false, isRemoved: false, error: action.payload };
 
 		default:

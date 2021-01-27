@@ -16,14 +16,22 @@ import {
 	CART_SAVE_PAYMENT_METHOD,
 } from "../constants/cartConstant";
 
-export const listCart = () => async (dispatch) => {
+export const listCart = () => async (dispatch, getState) => {
 	try {
 		dispatch({ type: CART_LIST_ITEM_REQUEST });
-		const { data } = await axios.get(`http://localhost:4000/api/carts`, {
+
+		const {
+			userLogin: { userInfo },
+		} = getState();
+
+		const config = {
 			headers: {
-				Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmZDk4ZWYwZjdjY2M4MThiODAxZTM3MyIsImVtYWlsIjoiYWJjeHl6QGdtYWlsLmNvbSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTYxMTIyODAxM30.6G-cvpbLnxDjVjC6ZyUYslU249Wf5BVTLgfF9a4CB04`,
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${userInfo.token}`,
 			},
-		});
+		};
+
+		const { data } = await axios.get(`http://localhost:4000/api/carts`, config);
 
 		if (!data.data || data.data === null) {
 			throw Error("Empty Cart");
@@ -47,34 +55,37 @@ export const listCart = () => async (dispatch) => {
 };
 
 export const incrementCart = (productId, op = "increment") => async (
-	dispatch
+	dispatch,
+	getState
 ) => {
 	try {
 		dispatch({ type: CART_INCREMENT_ITEM_REQUEST });
+		const {
+			userLogin: { userInfo },
+		} = getState();
+
+		const config = {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${userInfo.token}`,
+			},
+		};
+
 		if (op === "increment") {
 			await axios.put(
 				`http://localhost:4000/api/carts/${productId}`,
 				{},
-				{
-					headers: {
-						Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmZDk4ZWYwZjdjY2M4MThiODAxZTM3MyIsImVtYWlsIjoiYWJjeHl6QGdtYWlsLmNvbSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTYxMTIyODAxM30.6G-cvpbLnxDjVjC6ZyUYslU249Wf5BVTLgfF9a4CB04`,
-					},
-				}
+				config
 			);
 		} else if (op === "decrement") {
 			await axios.put(
 				`http://localhost:4000/api/carts/${productId}?decrement=1`,
 				{},
-				{
-					headers: {
-						Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmZDk4ZWYwZjdjY2M4MThiODAxZTM3MyIsImVtYWlsIjoiYWJjeHl6QGdtYWlsLmNvbSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTYxMTIyODAxM30.6G-cvpbLnxDjVjC6ZyUYslU249Wf5BVTLgfF9a4CB04`,
-					},
-				}
+				config
 			);
 		}
 
 		dispatch({ type: CART_INCREMENT_ITEM_SUCCESS });
-		dispatch(listCart());
 	} catch (err) {
 		dispatch({
 			type: CART_INCREMENT_ITEM_FAILS,
@@ -86,21 +97,27 @@ export const incrementCart = (productId, op = "increment") => async (
 	}
 };
 
-export const AddToCart = (productId, qty = 1) => async (dispatch) => {
+export const AddToCart = (productId, qty = 1) => async (dispatch, getState) => {
 	try {
 		dispatch({ type: CART_ADD_ITEM_REQUEST });
+		const {
+			userLogin: { userInfo },
+		} = getState();
+
+		const config = {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${userInfo.token}`,
+			},
+		};
+
 		await axios.post(
 			`http://localhost:4000/api/carts/${productId}?quantity=${qty}`,
 			{},
-			{
-				headers: {
-					Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmZDk4ZWYwZjdjY2M4MThiODAxZTM3MyIsImVtYWlsIjoiYWJjeHl6QGdtYWlsLmNvbSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTYxMTIyODAxM30.6G-cvpbLnxDjVjC6ZyUYslU249Wf5BVTLgfF9a4CB04`,
-				},
-			}
+			config
 		);
 
 		dispatch({ type: CART_ADD_ITEM_SUCCESS });
-		dispatch(listCart());
 	} catch (err) {
 		dispatch({
 			type: CART_ADD_ITEM_FAILS,
@@ -112,16 +129,22 @@ export const AddToCart = (productId, qty = 1) => async (dispatch) => {
 	}
 };
 
-export const removeFromCart = (pid) => async (dispatch) => {
+export const removeFromCart = (pid) => async (dispatch, getState) => {
 	dispatch({ type: CART_REMOVE_ITEM_REQUEST });
+	const {
+		userLogin: { userInfo },
+	} = getState();
+
+	const config = {
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${userInfo.token}`,
+		},
+	};
+
 	try {
-		await axios.delete(`http://localhost:4000/api/carts/${pid}`, {
-			headers: {
-				Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVmZDk4ZWYwZjdjY2M4MThiODAxZTM3MyIsImVtYWlsIjoiYWJjeHl6QGdtYWlsLmNvbSIsImlzQWRtaW4iOnRydWUsImlhdCI6MTYxMTIyODAxM30.6G-cvpbLnxDjVjC6ZyUYslU249Wf5BVTLgfF9a4CB04`,
-			},
-		});
+		await axios.delete(`http://localhost:4000/api/carts/${pid}`, config);
 		dispatch({ type: CART_REMOVE_ITEM_SUCCESS });
-		dispatch(listCart());
 	} catch (err) {
 		dispatch({
 			type: CART_REMOVE_ITEM_FAILS,

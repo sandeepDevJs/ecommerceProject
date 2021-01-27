@@ -15,6 +15,7 @@ import {
 	createProductReview,
 } from "../actions/productActions";
 import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstant";
+import { CART_ADD_ITEM_RESET } from "../constants/cartConstant";
 import { AddToCart } from "../actions/cartAction";
 import Rating from "../components/Rating";
 import Loader from "../components/Loader";
@@ -25,7 +26,8 @@ const ProductScreen = ({ match }) => {
 	const [qty, setQty] = useState(1);
 	const [rating, setRating] = useState(0);
 	const [comment, setComment] = useState("");
-	const [addToCartState, setCartState] = useState({});
+
+	const [productAddedstate, setProductAddedstate] = useState(0);
 
 	const productDetails = useSelector((state) => state.productDetails);
 	const { loading, error, product } = productDetails;
@@ -48,11 +50,11 @@ const ProductScreen = ({ match }) => {
 			dispatch({ type: PRODUCT_CREATE_REVIEW_RESET });
 		}
 		dispatch(listProductDetails(match.params.slug));
-	}, [dispatch, match, successCreateReview]);
+	}, [dispatch, match, successCreateReview, cartState]);
 
 	const addToCartHandler = (pid) => {
 		dispatch(AddToCart(pid, qty));
-		setCartState(cartState);
+		setProductAddedstate(1);
 	};
 
 	const allCartProducts = useSelector((state) => state.cartList);
@@ -69,6 +71,11 @@ const ProductScreen = ({ match }) => {
 		e.preventDefault();
 		dispatch(createProductReview(product._id, { text: comment, rating }));
 	};
+
+	useEffect(() => {
+		dispatch({ type: CART_ADD_ITEM_RESET });
+		dispatch({ type: PRODUCT_CREATE_REVIEW_RESET });
+	}, [dispatch]);
 
 	return (
 		<>
@@ -143,19 +150,19 @@ const ProductScreen = ({ match }) => {
 									)}
 
 									<ListGroup.Item>
-										{addToCartState.error && (
-											<Message variant="danger">{addToCartState.error}</Message>
+										{cartState.error && (
+											<Message variant="danger">{cartState.error}</Message>
 										)}
 
 										{isInCart(product._id) ? (
 											<Button className="btn-block" type="button">
 												<i className="fas fa-check"></i>
 											</Button>
-										) : addToCartState.loading ? (
+										) : cartState.loading ? (
 											<Button className="btn-block" type="button">
 												<Loader />
 											</Button>
-										) : addToCartState.isAdded ? (
+										) : productAddedstate ? (
 											<Button className="btn-block" type="button">
 												<i className="fas fa-check"></i>
 											</Button>
@@ -215,6 +222,7 @@ const ProductScreen = ({ match }) => {
 													constrolId="comment"
 													row={3}
 													value={comment}
+													placeholder="Write A Review..."
 													onChange={(e) => setComment(e.target.value)}
 												></Form.Control>
 											</Form.Group>
