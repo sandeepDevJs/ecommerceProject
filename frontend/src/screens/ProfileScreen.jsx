@@ -6,8 +6,9 @@ import Message from "../components/Message";
 import Loader from "../components/Loader";
 import { getUserDetails, updateUserProfile } from "../actions/userActions";
 import { listMyOrder } from "../actions/orderActions";
+import { USER_PROFILE_UPDATE_RESET } from "../constants/userConstants";
 
-const ProfileScreen = ({ history }) => {
+const ProfileScreen = () => {
 	const [email, setEmail] = useState("");
 	const [name, setName] = useState("");
 
@@ -21,14 +22,16 @@ const ProfileScreen = ({ history }) => {
 	const { loading: loadingOrders, error: errorOrders, orders } = orderListMy;
 
 	useEffect(() => {
-		if (!user.name) {
+		console.log(user);
+		if (!user.name || userUpdateProfile.success) {
+			dispatch({ type: USER_PROFILE_UPDATE_RESET });
 			dispatch(getUserDetails());
 			dispatch(listMyOrder());
 		} else {
 			setName(user.name);
 			setEmail(user.email);
 		}
-	}, [dispatch, user]);
+	}, [dispatch, user, userUpdateProfile]);
 
 	const onSubmitHandler = (e) => {
 		e.preventDefault();

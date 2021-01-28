@@ -123,7 +123,6 @@ export const getUserDetails = () => async (dispatch, getState) => {
 		};
 
 		const { data } = await axios.get("http://localhost:4000/api/me", config);
-
 		dispatch({
 			type: USER_DETAILS_SUCCESS,
 			payload: data.data,
@@ -161,11 +160,14 @@ export const updateUserProfile = (userData) => async (dispatch, getState) => {
 			{ ...userData },
 			config
 		);
-
 		dispatch({
 			type: USER_PROFILE_UPDATE_SUCCESS,
 			payload: data.data,
 		});
+
+		dispatch({ type: USER_LOGIN_SUCCESS, payload: data.data });
+
+		localStorage.setItem("userInfo", JSON.stringify(data.data));
 	} catch (err) {
 		dispatch({
 			type: USER_PROFILE_UPDATE_FAILS,

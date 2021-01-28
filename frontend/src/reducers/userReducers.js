@@ -13,6 +13,7 @@ import {
 	USER_PROFILE_UPDATE_REQUEST,
 	USER_PROFILE_UPDATE_SUCCESS,
 	USER_DETAILS_RESET,
+	USER_PROFILE_UPDATE_RESET,
 } from "../constants/userConstants";
 
 const userInfoFromLocalStorage = localStorage.getItem("userInfo")
@@ -56,7 +57,10 @@ export const userRegisterReducer = (state = {}, action) => {
 	}
 };
 
-export const userDetailsReducer = (state = { user: {} }, action) => {
+export const userDetailsReducer = (
+	state = { user: { name: undefined } },
+	action
+) => {
 	switch (action.type) {
 		case USER_DETAILS_REQUEST:
 			return { ...state, loading: true };
@@ -85,6 +89,8 @@ export const userUpdateProfileReducer = (state = {}, action) => {
 		case USER_PROFILE_UPDATE_FAILS:
 			return { loading: false, success: false, error: action.payload };
 
+		case USER_PROFILE_UPDATE_RESET:
+			return {};
 		default:
 			return state;
 	}
