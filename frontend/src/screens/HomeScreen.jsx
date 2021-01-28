@@ -4,17 +4,21 @@ import { Row, Col } from "react-bootstrap";
 import Product from "../components/Product";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
+import Paginate from "../components/Paginate";
 import { listProducts } from "../actions/productActions";
 
-const HomeScreen = () => {
+const HomeScreen = ({ match }) => {
+	let keyword = match.params.keyword;
+	let page = match.params.page || 1;
+
 	const dispatch = useDispatch();
 
 	const productList = useSelector((state) => state.productList);
-	const { loading, error, products } = productList;
+	const { loading, error, products, pagination } = productList;
 
 	useEffect(() => {
-		dispatch(listProducts());
-	}, [dispatch]);
+		dispatch(listProducts(keyword, page));
+	}, [dispatch, keyword, page]);
 
 	return (
 		<>
@@ -24,13 +28,20 @@ const HomeScreen = () => {
 			) : error ? (
 				<Message variant="danger">{error}</Message>
 			) : (
-				<Row>
-					{products.map((product) => (
-						<Col key={product._id} sm={12} md={6} lg={4}>
-							<Product product={product} />
-						</Col>
-					))}
-				</Row>
+				<>
+					<Row>
+						{products.map((product) => (
+							<Col key={product._id} sm={12} md={6} lg={4}>
+								<Product product={product} />
+							</Col>
+						))}
+					</Row>
+					<Paginate
+						pages={pagination.pages}
+						page={page}
+						keyword={keyword ? keyword : undefined}
+					/>
+				</>
 			)}
 		</>
 	);

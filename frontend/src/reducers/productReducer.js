@@ -28,12 +28,19 @@ let initStateForDetails = {
 	reviews: [],
 };
 
-export const productListReducer = (state = { products: [] }, action) => {
+export const productListReducer = (
+	state = { products: [], pagination: { page: 0 } },
+	action
+) => {
 	switch (action.type) {
 		case PRODUCT_LIST_REQUEST:
 			return { loading: true };
 		case PRODUCT_LIST_SUCCESS:
-			return { loading: false, products: action.payload };
+			return {
+				loading: false,
+				products: action.payload.data,
+				pagination: action.payload.pagination,
+			};
 
 		case PRODUCT_LIST_FAILS:
 			return { loading: false, error: action.payload };

@@ -11,15 +11,16 @@ import {
 	PRODUCT_CREATE_REVIEW_SUCCESS,
 } from "../constants/productConstant";
 
-export const listProducts = () => async (dispatch) => {
+export const listProducts = (keyword = "", page = 0) => async (dispatch) => {
 	try {
 		dispatch({ type: PRODUCT_LIST_REQUEST });
 		const { data } = await axios.get(
-			"http://localhost:4000/api/products?limit=10"
+			`http://localhost:4000/api/products?limit=3&keyword=${keyword}&page=${page}`
 		);
+		console.log(data);
 		dispatch({
 			type: PRODUCT_LIST_SUCCESS,
-			payload: data.data,
+			payload: data,
 		});
 	} catch (err) {
 		dispatch({

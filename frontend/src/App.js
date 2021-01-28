@@ -28,7 +28,14 @@ export default function App() {
 					<Route path="/register" component={RegisterScreen} />
 					<Route path="/profile" component={ProfileScreen} />
 					<Route path="/product/:slug" component={ProductScreen} />
-					<Route path="/cart/:slug?" component={CartScreen} />
+					<Route path="/cart" component={CartScreen} />
+					<Route path="/search/:keyword" component={HomeScreen} exact />
+					<Route path="/page/:page" component={HomeScreen} exact />
+					<Route
+						path="/search/:keyword/page/:page"
+						exact
+						component={HomeScreen}
+					/>
 					<Route path="/" exact component={HomeScreen} />
 				</main>
 			</Container>
