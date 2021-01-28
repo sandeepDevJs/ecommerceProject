@@ -20,6 +20,7 @@ import { AddToCart } from "../actions/cartAction";
 import Rating from "../components/Rating";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
+import MetaContainer from "../components/MetaContainer";
 
 const ProductScreen = ({ match }) => {
 	const dispatch = useDispatch();
@@ -88,6 +89,7 @@ const ProductScreen = ({ match }) => {
 				<Message variant="danger">{error}</Message>
 			) : (
 				<>
+					<MetaContainer title={product.title} />
 					<Row>
 						<Col md={6}>
 							<Image src={product.product_image} alt={product.name} fluid />
