@@ -13,6 +13,7 @@ import ShippingScreen from "./screens/ShippingScreen";
 import PaymentScreen from "./screens/PaymentScreen";
 import PlaceOrderScreen from "./screens/PlaceOrderScreen";
 import OrderScreen from "./screens/OrderScreen";
+import PrivateRoute from "./components/PrivateRoute";
 
 export default function App() {
 	return (
@@ -20,15 +21,15 @@ export default function App() {
 			<Header />
 			<Container>
 				<main className="py-3">
-					<Route path="/shipping" component={ShippingScreen} />
-					<Route path="/order/:id" component={OrderScreen} />
-					<Route path="/payment" component={PaymentScreen} />
-					<Route path="/placeorder" component={PlaceOrderScreen} />
+					<PrivateRoute path="/shipping" component={ShippingScreen} />
+					<PrivateRoute path="/order/:id" component={OrderScreen} />
+					<PrivateRoute path="/payment" component={PaymentScreen} />
+					<PrivateRoute path="/placeorder" component={PlaceOrderScreen} />
 					<Route path="/login" component={LoginScreen} />
 					<Route path="/register" component={RegisterScreen} />
-					<Route path="/profile" component={ProfileScreen} />
+					<PrivateRoute path="/profile" component={ProfileScreen} />
 					<Route path="/product/:slug" component={ProductScreen} />
-					<Route path="/cart" component={CartScreen} />
+					<PrivateRoute path="/cart" component={CartScreen} />
 					<Route path="/search/:keyword" component={HomeScreen} exact />
 					<Route path="/page/:page" component={HomeScreen} exact />
 					<Route
