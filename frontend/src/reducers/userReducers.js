@@ -14,6 +14,14 @@ import {
 	USER_PROFILE_UPDATE_SUCCESS,
 	USER_DETAILS_RESET,
 	USER_PROFILE_UPDATE_RESET,
+	USER_FORGOT_PASS_FAILS,
+	USER_FORGOT_PASS_REQUEST,
+	USER_FORGOT_PASS_SUCCESS,
+	USER_FORGOT_PASS_RESET,
+	USER_RESET_PASS_REQUEST,
+	USER_RESET_PASS_RESET,
+	USER_RESET_PASS_SUCCESS,
+	USER_RESET_PASS_FAILS,
 } from "../constants/userConstants";
 
 const userInfoFromLocalStorage = localStorage.getItem("userInfo")
@@ -93,5 +101,42 @@ export const userUpdateProfileReducer = (state = {}, action) => {
 			return {};
 		default:
 			return state;
+	}
+};
+
+export const forgotPasswordReducer = (state = {}, action) => {
+	switch (action.type) {
+		case USER_FORGOT_PASS_REQUEST:
+			return { loading: true };
+
+		case USER_FORGOT_PASS_SUCCESS:
+			return { loading: false, success: true };
+
+		case USER_FORGOT_PASS_FAILS:
+			return { loading: false, error: action.payload };
+
+		case USER_FORGOT_PASS_RESET:
+			return {};
+
+		default:
+			return {};
+	}
+};
+export const resetPasswordReducer = (state = {}, action) => {
+	switch (action.type) {
+		case USER_RESET_PASS_REQUEST:
+			return { loading: true };
+
+		case USER_RESET_PASS_SUCCESS:
+			return { loading: false, success: true };
+
+		case USER_RESET_PASS_FAILS:
+			return { loading: false, error: action.payload };
+
+		case USER_RESET_PASS_RESET:
+			return {};
+
+		default:
+			return {};
 	}
 };

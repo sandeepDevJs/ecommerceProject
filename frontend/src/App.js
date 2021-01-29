@@ -13,6 +13,7 @@ import ShippingScreen from "./screens/ShippingScreen";
 import PaymentScreen from "./screens/PaymentScreen";
 import PlaceOrderScreen from "./screens/PlaceOrderScreen";
 import OrderScreen from "./screens/OrderScreen";
+import ResetPasswordScreen from "./screens/ResetPasswordScreen";
 import PrivateRoute from "./components/PrivateRoute";
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
 					<PrivateRoute path="/payment" component={PaymentScreen} />
 					<PrivateRoute path="/placeorder" component={PlaceOrderScreen} />
 					<Route path="/login" component={LoginScreen} />
+					<Route path="/resetPassword/:token" component={ResetPasswordScreen} />
 					<Route path="/register" component={RegisterScreen} />
 					<PrivateRoute path="/profile" component={ProfileScreen} />
 					<Route path="/product/:slug" component={ProductScreen} />

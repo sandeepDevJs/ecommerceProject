@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import FromContainer from "../components/FromContainer";
-import { login } from "../actions/userActions";
+import { login, forgotPassword } from "../actions/userActions";
 
 const LoginScreen = ({ location, history }) => {
 	const [email, setEmail] = useState("");
@@ -14,6 +14,13 @@ const LoginScreen = ({ location, history }) => {
 	const dispatch = useDispatch();
 	const userLogin = useSelector((state) => state.userLogin);
 	const { loading, error, userInfo } = userLogin;
+
+	const userForgotPassword = useSelector((state) => state.userForgotPassword);
+	const {
+		loading: forgotPassLoading,
+		error: forgotPassError,
+		success: forgotPassSuccess,
+	} = userForgotPassword;
 
 	const redirect = location.search ? location.search.split("=")[1] : "/";
 
@@ -28,11 +35,24 @@ const LoginScreen = ({ location, history }) => {
 		dispatch(login(email, password));
 	};
 
+	const forgotPasswordHandler = () => {
+		if (!email.trim()) {
+			alert("Enter Email!, Then Hit Forgot Password");
+		} else {
+			dispatch(forgotPassword(email));
+		}
+	};
+
 	return (
 		<FromContainer>
 			<h1>Sign In</h1>
-			{error && <Message variant="danger">{error}</Message>}
-			{loading && <Loader />}
+			{(error || forgotPassError) && (
+				<Message variant="danger">{error}</Message>
+			)}
+			{forgotPassSuccess && (
+				<Message variant="success">Check Your Email For!</Message>
+			)}
+			{(loading || forgotPassLoading) && <Loader />}
 			<Form onSubmit={onSubmitHandler}>
 				<Form.Group controlId="email">
 					<Form.Label>Email</Form.Label>
@@ -66,6 +86,16 @@ const LoginScreen = ({ location, history }) => {
 					>
 						Register
 					</Link>
+				</Col>
+			</Row>
+			<Row className="py-3">
+				<Col>
+					<p
+						style={{ textDecoration: "underline", cursor: "pointer" }}
+						onClick={forgotPasswordHandler}
+					>
+						Forgot Password?
+					</p>
 				</Col>
 			</Row>
 		</FromContainer>

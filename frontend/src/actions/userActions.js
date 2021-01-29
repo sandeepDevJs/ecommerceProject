@@ -14,6 +14,13 @@ import {
 	USER_PROFILE_UPDATE_REQUEST,
 	USER_PROFILE_UPDATE_SUCCESS,
 	USER_DETAILS_RESET,
+	USER_FORGOT_PASS_FAILS,
+	USER_FORGOT_PASS_REQUEST,
+	USER_FORGOT_PASS_RESET,
+	USER_FORGOT_PASS_SUCCESS,
+	USER_RESET_PASS_REQUEST,
+	USER_RESET_PASS_SUCCESS,
+	USER_RESET_PASS_FAILS,
 } from "../constants/userConstants";
 
 import { ORDER_LIST_MY_RESET } from "../constants/orderConstant";
@@ -171,6 +178,65 @@ export const updateUserProfile = (userData) => async (dispatch, getState) => {
 	} catch (err) {
 		dispatch({
 			type: USER_PROFILE_UPDATE_FAILS,
+			payload:
+				err.response && err.response.data.message
+					? err.response.data.message
+					: err.message,
+		});
+	}
+};
+
+export const forgotPassword = (email) => async (dispatch) => {
+	dispatch({
+		type: USER_FORGOT_PASS_REQUEST,
+	});
+
+	const config = {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	};
+
+	try {
+		await axios.post(
+			"http://localhost:4000/api/auth/forgotPassword",
+			{ email },
+			config
+		);
+
+		dispatch({ type: USER_FORGOT_PASS_SUCCESS });
+	} catch (err) {
+		dispatch({
+			type: USER_FORGOT_PASS_FAILS,
+			payload:
+				err.response && err.response.data.message
+					? err.response.data.message
+					: err.message,
+		});
+	}
+};
+export const resetPassword = (token, password) => async (dispatch) => {
+	dispatch({
+		type: USER_RESET_PASS_REQUEST,
+	});
+
+	const config = {
+		headers: {
+			"Content-Type": "application/json",
+		},
+	};
+
+	try {
+		await axios.put(
+			`http://localhost:4000/api/auth/resetPassword/${token}`,
+			{ password },
+			config
+		);
+
+		dispatch({ type: USER_RESET_PASS_SUCCESS });
+	} catch (err) {
+		dispatch({
+			type: USER_RESET_PASS_FAILS,
 			payload:
 				err.response && err.response.data.message
 					? err.response.data.message
