@@ -20,7 +20,7 @@ const initialValues = {
 const validationSchema = Yup.object({
 	pass: Yup.string()
 		.max(15, "Password Must Be At Most 15 characters!")
-		.min(8, "Password Must Be At At Least 8 characters!")
+		.min(8, "Password Must Be At Least 8 characters!")
 		.required("Required!"),
 	confirmPass: Yup.string()
 		.oneOf([Yup.ref("pass"), null], "Password Didn't Match!")

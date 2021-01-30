@@ -8,12 +8,15 @@ import {
 	ListGroup,
 	Card,
 	Button,
-	Form,
+	FormGroup,
+	FormLabel,
 } from "react-bootstrap";
 import {
 	listProductDetails,
 	createProductReview,
 } from "../actions/productActions";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import { PRODUCT_CREATE_REVIEW_RESET } from "../constants/productConstant";
 import { CART_ADD_ITEM_RESET } from "../constants/cartConstant";
 import { AddToCart } from "../actions/cartAction";
@@ -25,8 +28,16 @@ import MetaContainer from "../components/MetaContainer";
 const ProductScreen = ({ match }) => {
 	const dispatch = useDispatch();
 	const [qty, setQty] = useState(1);
-	const [rating, setRating] = useState(0);
-	const [comment, setComment] = useState("");
+
+	const initialValues = {
+		rating: "",
+		comment: "",
+	};
+
+	const validationSchema = Yup.object({
+		rating: Yup.number().min(1).max(5).required("Required!"),
+		comment: Yup.string().min(10).max(500).required("Required!"),
+	});
 
 	const [productAddedstate, setProductAddedstate] = useState(0);
 
@@ -39,16 +50,15 @@ const ProductScreen = ({ match }) => {
 	const {
 		succes: successCreateReview,
 		error: errorCreateReview,
+		loading: errorCreateLoading,
 	} = productCreateReview;
 
 	const { userInfo } = useSelector((state) => state.userLogin);
 
 	useEffect(() => {
 		if (successCreateReview) {
-			alert("Review Submitted!");
-			setRating(0);
-			setComment("");
 			dispatch({ type: PRODUCT_CREATE_REVIEW_RESET });
+			alert("Review Submitted!");
 		}
 		dispatch(listProductDetails(match.params.slug));
 	}, [dispatch, match, successCreateReview, cartState]);
@@ -68,9 +78,17 @@ const ProductScreen = ({ match }) => {
 		return listOfCartProduct.some((item) => item.productId._id === pid);
 	};
 
-	const onSubmitHandler = (e) => {
-		e.preventDefault();
-		dispatch(createProductReview(product._id, { text: comment, rating }));
+	const onSubmitHandler = (
+		values,
+		{ setSubmitting, setErrors, setStatus, resetForm }
+	) => {
+		dispatch(
+			createProductReview(product._id, {
+				text: values.comment,
+				rating: values.rating,
+			})
+		);
+		resetForm({});
 	};
 
 	useEffect(() => {
@@ -202,36 +220,53 @@ const ProductScreen = ({ match }) => {
 										<Message variant="danger">{errorCreateReview}</Message>
 									)}
 									{userInfo ? (
-										<Form onSubmit={onSubmitHandler}>
-											<Form.Group controlId="rating">
-												<Form.Label>Rating</Form.Label>
-												<Form.Control
-													as="select"
-													value={rating}
-													onChange={(e) => setRating(e.target.value)}
-												>
-													<option value="">Select...</option>
-													<option value="1">1 - Poor</option>
-													<option value="2">2 - Fair</option>
-													<option value="3">3 - Good</option>
-													<option value="4">4 - Very Good</option>
-													<option value="5">5 - Excellent</option>
-												</Form.Control>
-											</Form.Group>
-											<Form.Group>
-												<Form.Control
-													as="textarea"
-													constrolId="comment"
-													row={3}
-													value={comment}
-													placeholder="Write A Review..."
-													onChange={(e) => setComment(e.target.value)}
-												></Form.Control>
-											</Form.Group>
-											<Button type="submit" variant="primary">
-												Submit
-											</Button>
-										</Form>
+										<Formik
+											onSubmit={onSubmitHandler}
+											initialValues={initialValues}
+											validationSchema={validationSchema}
+										>
+											<Form>
+												{errorCreateLoading && <Loader />}
+												<FormGroup controlId="rating">
+													<FormLabel>Rating</FormLabel>
+													<Field
+														as="select"
+														name="rating"
+														className="form-control"
+													>
+														<option value={0}>Select...</option>
+														<option value={1}>1 - Poor</option>
+														<option value={2}>2 - Fair</option>
+														<option value={3}>3 - Good</option>
+														<option value={4}>4 - Very Good</option>
+														<option value={5}>5 - Excellent</option>
+													</Field>
+													<ErrorMessage name="rating">
+														{(errMsg) => (
+															<Message variant="danger">{errMsg}</Message>
+														)}
+													</ErrorMessage>
+												</FormGroup>
+												<FormGroup>
+													<Field
+														as="textarea"
+														constrolId="comment"
+														row={3}
+														name="comment"
+														placeholder="Write A Review..."
+														className="form-control"
+													/>
+													<ErrorMessage name="comment">
+														{(errMsg) => (
+															<Message variant="danger">{errMsg}</Message>
+														)}
+													</ErrorMessage>
+												</FormGroup>
+												<Button type="submit" variant="primary">
+													Submit
+												</Button>
+											</Form>
+										</Formik>
 									) : (
 										<Message>
 											Please <Link to="/login"> Sign In </Link>To Write A Review{" "}

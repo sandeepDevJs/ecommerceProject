@@ -1,15 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { Form, Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button, FormGroup, FormLabel } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 import Message from "../components/Message";
 import Loader from "../components/Loader";
 import FromContainer from "../components/FromContainer";
 import { login, forgotPassword } from "../actions/userActions";
 
 const LoginScreen = ({ location, history }) => {
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+	const formRef = useRef();
+
+	const initialValues = {
+		email: "",
+		password: "",
+	};
+
+	const validationSchema = Yup.object({
+		email: Yup.string().email("Enter Valid Email!").required("Required!"),
+		password: Yup.string()
+			.max(15, "Password Must Be At Most 15 characters!")
+			.min(8, "Password Must Be At Least 8 characters!")
+			.required("Required!"),
+	});
 
 	const dispatch = useDispatch();
 	const userLogin = useSelector((state) => state.userLogin);
@@ -30,16 +44,15 @@ const LoginScreen = ({ location, history }) => {
 		}
 	}, [history, userInfo, redirect]);
 
-	const onSubmitHandler = (e) => {
-		e.preventDefault();
-		dispatch(login(email, password));
+	const onSubmitHandler = (values) => {
+		dispatch(login(values.email, values.password));
 	};
 
 	const forgotPasswordHandler = () => {
-		if (!email.trim()) {
-			alert("Enter Email!, Then Hit Forgot Password");
+		if (formRef.current.errors.email) {
+			alert("Enter Proper Email!, Then Hit Forgot Password");
 		} else {
-			dispatch(forgotPassword(email));
+			dispatch(forgotPassword(formRef.current.values.email));
 		}
 	};
 
@@ -50,32 +63,52 @@ const LoginScreen = ({ location, history }) => {
 				<Message variant="danger">{error}</Message>
 			)}
 			{forgotPassSuccess && (
-				<Message variant="success">Check Your Email For!</Message>
+				<Message variant="success">Check Your Email!</Message>
 			)}
 			{(loading || forgotPassLoading) && <Loader />}
-			<Form onSubmit={onSubmitHandler}>
-				<Form.Group controlId="email">
-					<Form.Label>Email</Form.Label>
-					<Form.Control
-						type="email"
-						placeholder="Enter Email"
-						value={email}
-						onChange={(e) => setEmail(e.target.value)}
-					/>
-				</Form.Group>
-				<Form.Group controlId="password">
-					<Form.Label>Password</Form.Label>
-					<Form.Control
-						type="password"
-						placeholder="Enter Email"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-					/>
-				</Form.Group>
-				<Button variant="primary" type="submit">
-					Sign In
-				</Button>
-			</Form>
+			<Formik
+				initialValues={initialValues}
+				validationSchema={validationSchema}
+				onSubmit={onSubmitHandler}
+				innerRef={formRef}
+			>
+				<Form>
+					<FormGroup controlId="email">
+						<FormLabel>Email</FormLabel>
+						<Field type="email" name="email">
+							{(props) => {
+								let { field } = props;
+								return (
+									<input
+										placeholder="Enter Email"
+										className="form-control"
+										id="email"
+										{...field}
+									/>
+								);
+							}}
+						</Field>
+						<ErrorMessage name="email">
+							{(errMsg) => <Message variant="danger">{errMsg}</Message>}
+						</ErrorMessage>
+					</FormGroup>
+					<FormGroup controlId="password">
+						<FormLabel>Password</FormLabel>
+						<Field
+							type="password"
+							className="form-control"
+							name="password"
+							placeholder="Enter Email"
+						/>
+						<ErrorMessage name="password">
+							{(errMsg) => <Message variant="danger">{errMsg}</Message>}
+						</ErrorMessage>
+					</FormGroup>
+					<Button variant="primary" type="submit">
+						Sign In
+					</Button>
+				</Form>
+			</Formik>
 			<Row className="py-3">
 				<Col>
 					New User ?{" "}
