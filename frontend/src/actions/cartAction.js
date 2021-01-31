@@ -24,6 +24,10 @@ export const listCart = () => async (dispatch, getState) => {
 			userLogin: { userInfo },
 		} = getState();
 
+		if (!userInfo) {
+			throw Error("Please Sign In!");
+		}
+
 		const config = {
 			headers: {
 				"Content-Type": "application/json",

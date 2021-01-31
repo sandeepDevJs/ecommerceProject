@@ -22,6 +22,10 @@ import {
 	USER_RESET_PASS_RESET,
 	USER_RESET_PASS_SUCCESS,
 	USER_RESET_PASS_FAILS,
+	USER_ALL_USERS_FAILS,
+	USER_ALL_USERS_REQUEST,
+	USER_ALL_USERS_SUCCESS,
+	USER_ALL_USERS_RESET,
 } from "../constants/userConstants";
 
 const userInfoFromLocalStorage = localStorage.getItem("userInfo")
@@ -138,5 +142,25 @@ export const resetPasswordReducer = (state = {}, action) => {
 
 		default:
 			return {};
+	}
+};
+
+//=============== Admin======================================
+
+export const userAllUsersReducer = (state = { data: [] }, action) => {
+	switch (action.type) {
+		case USER_ALL_USERS_REQUEST:
+			return { loading: true };
+
+		case USER_ALL_USERS_SUCCESS:
+			return { loading: false, data: action.payload };
+
+		case USER_ALL_USERS_FAILS:
+			return { loading: false, error: action.payload };
+
+		case USER_ALL_USERS_RESET:
+			return {};
+		default:
+			return state;
 	}
 };

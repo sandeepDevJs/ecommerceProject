@@ -54,6 +54,7 @@ const ProductScreen = ({ match }) => {
 	} = productCreateReview;
 
 	const { userInfo } = useSelector((state) => state.userLogin);
+	console.log("userInfo", userInfo);
 
 	useEffect(() => {
 		if (successCreateReview) {
@@ -219,7 +220,11 @@ const ProductScreen = ({ match }) => {
 									{errorCreateReview && (
 										<Message variant="danger">{errorCreateReview}</Message>
 									)}
-									{userInfo ? (
+									{!userInfo ? (
+										<Message>
+											Please <Link to="/login"> Sign In </Link>To Write A Review{" "}
+										</Message>
+									) : (
 										<Formik
 											onSubmit={onSubmitHandler}
 											initialValues={initialValues}
@@ -250,7 +255,7 @@ const ProductScreen = ({ match }) => {
 												<FormGroup>
 													<Field
 														as="textarea"
-														constrolId="comment"
+														controlId="comment"
 														row={3}
 														name="comment"
 														placeholder="Write A Review..."
@@ -267,10 +272,6 @@ const ProductScreen = ({ match }) => {
 												</Button>
 											</Form>
 										</Formik>
-									) : (
-										<Message>
-											Please <Link to="/login"> Sign In </Link>To Write A Review{" "}
-										</Message>
 									)}
 								</ListGroup.Item>
 							</ListGroup>

@@ -69,8 +69,7 @@ const CartScreen = () => {
 							<h1>Shopping Cart</h1>
 							{cart.products.length === 0 ? (
 								<Message>
-									Your Cart Is Empty!!,{" "}
-									<Link to="/">Click Here To Go Back</Link>{" "}
+									Your Cart Is Empty!!<Link to="/">Click Here To Go Back</Link>
 								</Message>
 							) : (
 								<ListGroup variant="flush">
