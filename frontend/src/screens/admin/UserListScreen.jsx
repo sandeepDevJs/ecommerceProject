@@ -1,15 +1,19 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getAllUsersList } from "../../actions/admin/userActions";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import { USER_LIST_COLUMNS } from "../../utils/columns";
-import { FormControl, FormGroup, FormLabel, Table } from "react-bootstrap";
-import { useTable, useSortBy } from "react-table";
+import { Table, Pagination, Form } from "react-bootstrap";
+import {
+	useTable,
+	useSortBy,
+	useGlobalFilter,
+	usePagination,
+} from "react-table";
+import GlobalFilter from "../../components/GlobalFilter";
 
 const UserListScreen = () => {
-	const [q, setQ] = useState("");
-
 	const dispatch = useDispatch();
 	const { loading, error, data: userData } = useSelector(
 		(state) => state.adminUserAllUser
@@ -23,28 +27,34 @@ const UserListScreen = () => {
 	const columns = useMemo(() => USER_LIST_COLUMNS, []);
 	const data = useMemo(() => (userData ? userData : []), [userData]);
 
-	const tableIstance = useTable(
-		{
-			columns,
-			data,
-		},
-		useSortBy
-	);
-
 	const {
 		getTableProps,
 		getTableBodyProps,
 		headerGroups,
-		rows,
+		page,
+		nextPage,
+		previousPage,
+		canNextPage,
+		canPreviousPage,
 		prepareRow,
-	} = tableIstance;
+		pageOptions,
+		gotoPage,
+		pageCount,
+		setPageSize,
+		state,
+		setGlobalFilter,
+	} = useTable(
+		{
+			columns,
+			data,
+			initialState: { pageSize: 4 },
+		},
+		useGlobalFilter,
+		useSortBy,
+		usePagination
+	);
 
-	// const searchData = (rows) =>
-	// 	rows.filter(
-	// 		(row) =>
-	// 			row.name.toLowerCase().indexOf(q.toLowerCase()) > -1 ||
-	// 			row.email.toLowerCase().indexOf(q.toLowerCase()) > -1
-	// 	);
+	const { globalFilter, pageIndex, pageSize } = state;
 
 	return (
 		<div>
@@ -52,15 +62,7 @@ const UserListScreen = () => {
 			{loading ? <Loader /> : <h1>users list</h1>}
 			{userData && (
 				<div>
-					<FormGroup>
-						<FormLabel>Search :</FormLabel>
-						<FormControl
-							type="text"
-							placeholder="Search Here.."
-							value={q}
-							onChange={(e) => setQ(e.target.value)}
-						/>
-					</FormGroup>
+					<GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
 					<Table {...getTableProps()}>
 						<thead>
 							{headerGroups.map((headerGroup) => (
@@ -88,7 +90,7 @@ const UserListScreen = () => {
 							))}
 						</thead>
 						<tbody {...getTableBodyProps()}>
-							{rows.map((row) => {
+							{page.map((row) => {
 								prepareRow(row);
 								return (
 									<tr {...row.getRowProps()}>
@@ -102,6 +104,50 @@ const UserListScreen = () => {
 							})}
 						</tbody>
 					</Table>
+					<Pagination>
+						<span>
+							page{" "}
+							<strong>
+								{pageIndex + 1} of {pageOptions.length}
+							</strong>
+						</span>{" "}
+						|
+						<Form.Group>
+							<Form.Control
+								style={{ paddingTop: "0px", margin: "0px" }}
+								as="select"
+								value={pageSize}
+								onChange={(e) => setPageSize(parseInt(e.target.value))}
+							>
+								{[4, 8, 10, 20].map((pSize) => (
+									<option key={pSize} value={pSize}>
+										show {pSize}
+									</option>
+								))}
+							</Form.Control>
+						</Form.Group>
+						<Pagination.Item
+							onClick={() => gotoPage(0)}
+							disabled={!canPreviousPage}
+						>
+							<i className="fas fa-angle-double-left"></i>
+						</Pagination.Item>
+						<Pagination.Item
+							onClick={() => previousPage()}
+							disabled={!canPreviousPage}
+						>
+							<i className="fas fa-caret-square-left"></i>
+						</Pagination.Item>
+						<Pagination.Item onClick={() => nextPage()} disabled={!canNextPage}>
+							<i className="fas fa-caret-square-right"></i>
+						</Pagination.Item>
+						<Pagination.Item
+							onClick={() => gotoPage(pageCount - 1)}
+							disabled={!canNextPage}
+						>
+							<i className="fas fa-angle-double-right"></i>
+						</Pagination.Item>
+					</Pagination>
 				</div>
 			)}
 		</div>
