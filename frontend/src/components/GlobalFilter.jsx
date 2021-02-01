@@ -10,8 +10,9 @@ const GlobalFilter = ({ filter, setFilter }) => {
 	}, 200);
 
 	return (
-		<FormGroup>
-			<FormLabel>Search :</FormLabel>
+		<FormGroup
+			style={{ backgroundColor: "#0f1123", color: "white", padding: "0.2rem" }}
+		>
 			<FormControl
 				type="text"
 				placeholder="Search Here.."

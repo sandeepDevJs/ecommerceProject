@@ -18,15 +18,13 @@ const OrderDetails = ({ match }) => {
 		dispatch(getAllOrderDetailsListById(userId));
 	}, [dispatch, userId]);
 
-	console.log(orders);
-
 	return (
 		<div>
 			{loading ? (
 				<Loader />
 			) : error ? (
 				<Message variant="danger">{error}</Message>
-			) : orders ? (
+			) : orders.length ? (
 				<>
 					<h2> {`${orders[0].userId.name}'s`} Order Details</h2>
 					<Table stripped bordered hover responsive className="table-sm">

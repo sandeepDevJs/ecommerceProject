@@ -16,7 +16,6 @@ import OrderScreen from "./screens/OrderScreen";
 import ResetPasswordScreen from "./screens/ResetPasswordScreen";
 import AdminScreens from "./screens/admin";
 import PrivateRoute from "./components/PrivateRoute";
-import Tests from "./screens/Tests";
 
 export default function App() {
 	return (
@@ -29,11 +28,9 @@ export default function App() {
 					<PrivateRoute path="/payment" component={PaymentScreen} />
 					<PrivateRoute path="/placeorder" component={PlaceOrderScreen} />
 					<Route path="/login" component={LoginScreen} />
-					<Route path="/tests" component={Tests} />
 					<Route path="/admin" component={AdminScreens} />
 					<Route path="/resetPassword/:token" component={ResetPasswordScreen} />
 					<Route path="/register" component={RegisterScreen} />
-					{/* <Route path="/adminDash" component={DashboardScreen} /> */}
 					<PrivateRoute path="/profile" component={ProfileScreen} />
 					<Route path="/product/:slug" component={ProductScreen} />
 					<PrivateRoute path="/cart" component={CartScreen} />
