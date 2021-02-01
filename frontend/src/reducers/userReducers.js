@@ -26,6 +26,10 @@ import {
 	USER_ALL_USERS_REQUEST,
 	USER_ALL_USERS_SUCCESS,
 	USER_ALL_USERS_RESET,
+	USER_ORDER_DETAILS_BY_ID_REQUEST,
+	USER_ORDER_DETAILS_BY_ID_SUCCESS,
+	USER_ORDER_DETAILS_BY_ID_FAILS,
+	USER_ORDER_DETAILS_BY_ID_RESET,
 } from "../constants/userConstants";
 
 const userInfoFromLocalStorage = localStorage.getItem("userInfo")
@@ -159,6 +163,27 @@ export const userAllUsersReducer = (state = { data: [] }, action) => {
 			return { loading: false, error: action.payload };
 
 		case USER_ALL_USERS_RESET:
+			return {};
+		default:
+			return state;
+	}
+};
+
+export const getAllOrderDetailsListByIdReducer = (
+	state = { data: [] },
+	action
+) => {
+	switch (action.type) {
+		case USER_ORDER_DETAILS_BY_ID_REQUEST:
+			return { loading: true, ...state };
+
+		case USER_ORDER_DETAILS_BY_ID_SUCCESS:
+			return { loading: false, data: action.payload };
+
+		case USER_ORDER_DETAILS_BY_ID_FAILS:
+			return { loading: false, error: action.payload };
+
+		case USER_ORDER_DETAILS_BY_ID_RESET:
 			return {};
 		default:
 			return state;

@@ -25,6 +25,7 @@ import {
 	forgotPasswordReducer,
 	resetPasswordReducer,
 	userAllUsersReducer,
+	getAllOrderDetailsListByIdReducer,
 } from "./reducers/userReducers";
 
 import {
@@ -50,6 +51,7 @@ const reducer = combineReducers({
 	userForgotPassword: forgotPasswordReducer,
 	userResetPassword: resetPasswordReducer,
 	adminUserAllUser: userAllUsersReducer,
+	adminGetAllOrderDetailsByUserId: getAllOrderDetailsListByIdReducer,
 	shippingDetails: shippingReducer,
 	orderCreate: orderCreateReducer,
 	orderDetails: orderDetailsReducer,
