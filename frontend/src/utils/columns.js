@@ -15,9 +15,11 @@ export const USER_LIST_COLUMNS = [
 	{
 		Header: "view",
 		Cell: ({ cell }) => (
-			<Link to={`/admin/users/usersOrderList/${cell.row.values._id}`}>
-				View Order Details
-			</Link>
+			<td>
+				<Link to={`/admin/users/usersOrderList/${cell.row.values._id}`}>
+					View Order Details
+				</Link>
+			</td>
 		),
 	},
 ];

@@ -63,7 +63,15 @@ const UserListScreen = () => {
 			{userData && (
 				<div>
 					<GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
-					<Table {...getTableProps()}>
+					<Table
+						variant="dark"
+						stripped
+						bordered
+						hover
+						responsive
+						className="table-sm"
+						{...getTableProps()}
+					>
 						<thead>
 							{headerGroups.map((headerGroup) => (
 								<tr {...headerGroup.getHeaderGroupProps()}>

@@ -9,6 +9,7 @@ const SideNavs = () => {
 				style={{
 					backgroundColor: "#f6f6f6",
 					fontSize: "0.8rem",
+					border: "2px solid #0f1123",
 				}}
 			>
 				<Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -32,12 +33,17 @@ const SideNavs = () => {
 						</LinkContainer>
 						<Dropdown.Divider />
 					</Nav.Item>
+
 					<Nav.Item>
-						<LinkContainer exact to="/admin/ye">
-							<Nav.Link>Active</Nav.Link>
+						<LinkContainer exact to="/admin/products">
+							<Nav.Link>
+								<i className="fas fa-store-alt px-3"></i>
+								Products
+							</Nav.Link>
 						</LinkContainer>
 						<Dropdown.Divider />
 					</Nav.Item>
+
 					<Nav.Item>
 						<LinkContainer exact to="/admin/k">
 							<Nav.Link>Active</Nav.Link>
