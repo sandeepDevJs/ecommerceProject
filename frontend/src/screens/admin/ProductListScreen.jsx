@@ -12,6 +12,8 @@ import {
 	usePagination,
 } from "react-table";
 import GlobalFilter from "../../components/GlobalFilter";
+import { Toast, ConfirmSwal } from "../../utils/sweetAlert2";
+import Swal from "sweetalert2";
 
 const ProductListScreen = () => {
 	const dispatch = useDispatch();
@@ -27,11 +29,42 @@ const ProductListScreen = () => {
 	} = useSelector((state) => state.adminDeleteProduct);
 
 	const handleClick = () => {
-		alert("working!s");
+		Swal.fire({
+			title: "Are you sure?",
+			text: "You won't be able to revert this!",
+			icon: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#3085d6",
+			cancelButtonColor: "#d33",
+			confirmButtonText: "Yes, delete it!",
+		}).then((result) => {
+			if (result.isConfirmed) {
+				Toast.fire({
+					icon: "success",
+					title: "Data Delete Successfully!",
+				});
+			}
+		});
 	};
 
 	const deleteProductOnClick = (pid) => {
-		dispatch(deleteProduct(pid));
+		Swal.fire({
+			title: "Are you sure?",
+			text: "You won't be able to revert this!",
+			icon: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#3085d6",
+			cancelButtonColor: "#d33",
+			confirmButtonText: "Yes, delete it!",
+		}).then((result) => {
+			if (result.isConfirmed) {
+				dispatch(deleteProduct(pid));
+				Toast.fire({
+					icon: "success",
+					title: "Data Delete Successfully!",
+				});
+			}
+		});
 	};
 
 	const PRODUCTS = [
