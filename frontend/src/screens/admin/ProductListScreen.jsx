@@ -1,20 +1,60 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
-import { Button, Table } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
+import { Table, Pagination, Form } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { listProducts } from "../../actions/productActions";
-import { format } from "date-fns";
-const OrderDetails = () => {
+import { listAllProducts } from "../../actions/productActions";
+import { PRODUCTS } from "../../utils/columns";
+import {
+	useTable,
+	useSortBy,
+	useGlobalFilter,
+	usePagination,
+} from "react-table";
+import GlobalFilter from "../../components/GlobalFilter";
+
+const ProductListScreen = () => {
 	const dispatch = useDispatch();
 
-	const productList = useSelector((state) => state.productList);
-	const { loading, error, products, pagination } = productList;
+	const { loading, error, products } = useSelector(
+		(state) => state.adminAllProductList
+	);
 
 	useEffect(() => {
-		dispatch(listProducts());
+		dispatch(listAllProducts());
 	}, [dispatch]);
+
+	const columns = useMemo(() => PRODUCTS, []);
+	const data = useMemo(() => (products ? products : []), [products]);
+
+	const {
+		getTableProps,
+		getTableBodyProps,
+		headerGroups,
+		page,
+		nextPage,
+		previousPage,
+		canNextPage,
+		canPreviousPage,
+		prepareRow,
+		pageOptions,
+		gotoPage,
+		pageCount,
+		setPageSize,
+		state,
+		setGlobalFilter,
+	} = useTable(
+		{
+			columns,
+			data,
+			initialState: { pageSize: 3 },
+		},
+		useGlobalFilter,
+		useSortBy,
+		usePagination
+	);
+
+	const { globalFilter, pageIndex, pageSize } = state;
 
 	return (
 		<div>
@@ -23,73 +63,115 @@ const OrderDetails = () => {
 			) : error ? (
 				<Message variant="danger">{error}</Message>
 			) : products.length ? (
-				<>
-					<h1>Products List</h1>
-					<Table
-						variant="dark"
-						stripped
-						bordered
-						hover
-						responsive
-						className="table-sm"
-					>
-						<thead>
-							<tr>
-								<th rowspan="2">
-									<strong>Title</strong>
-								</th>
-								<th rowspan="2">
-									<strong>Description</strong>
-								</th>
-								<th colSpan="2">
-									<strong>Manufacture Details</strong>
-								</th>
-								<th rowspan="2">
-									<strong>Price</strong>
-								</th>
-								<th rowspan="2">
-									<strong>Rating</strong>
-								</th>
-								<th rowspan="2">
-									<strong>View</strong>
-								</th>
-							</tr>
-							<tr>
-								<th>
-									<strong>Model Number</strong>
-								</th>
-								<th>
-									<strong>Release Date</strong>
-								</th>
-							</tr>
-						</thead>
-						<tbody>
-							{products.map((product) => (
-								<tr key={product._id}>
-									<td>{product.title}</td>
-									<td>{product.description.substring(0, 55)}...</td>
-									<td>{product.manufacture_details.model_number}</td>
-									<td>
-										{format(
-											new Date(product.manufacture_details.release_date),
-											"dd/MM/yyyy"
-										)}
-									</td>
-									<td>${product.pricing.price}</td>
-									<td>{product.avgRating}</td>
-									<td>
-										{" "}
-										<LinkContainer to={`../../OrderDetails/${product._id}`}>
-											<Button className="btn-sm" variant="light">
-												Details
-											</Button>
-										</LinkContainer>{" "}
-									</td>
-								</tr>
-							))}
-						</tbody>
-					</Table>
-				</>
+				<div>
+					{error && <Message variant="danger">{error}</Message>}
+					{loading ? <Loader /> : <h1>Products List</h1>}
+					{products && (
+						<div>
+							<GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
+							<Table
+								variant="dark"
+								stripped
+								bordered
+								hover
+								responsive
+								className="table-sm"
+								{...getTableProps()}
+							>
+								<thead>
+									{headerGroups.map((headerGroup) => (
+										<tr {...headerGroup.getHeaderGroupProps()}>
+											{headerGroup.headers.map((column) => (
+												<th
+													{...column.getHeaderProps(
+														column.getSortByToggleProps()
+													)}
+												>
+													{" "}
+													{column.render("Header")}{" "}
+													<span>
+														{column.isSorted ? (
+															column.isSortedDesc ? (
+																<i className="fas fa-sort-down"></i>
+															) : (
+																<i className="fas fa-sort-up"></i>
+															)
+														) : (
+															""
+														)}
+													</span>
+												</th>
+											))}
+										</tr>
+									))}
+								</thead>
+								<tbody {...getTableBodyProps()}>
+									{page.map((row) => {
+										prepareRow(row);
+										return (
+											<tr {...row.getRowProps()}>
+												{row.cells.map((cell) => {
+													return (
+														<td {...cell.getCellProps()}>
+															{cell.render("Cell")}
+														</td>
+													);
+												})}
+											</tr>
+										);
+									})}
+								</tbody>
+							</Table>
+							<Pagination>
+								<span>
+									page{" "}
+									<strong>
+										{pageIndex + 1} of {pageOptions.length}
+									</strong>
+								</span>{" "}
+								|
+								<Form.Group>
+									<Form.Control
+										style={{ paddingTop: "0px", margin: "0px" }}
+										as="select"
+										value={pageSize}
+										onChange={(e) => setPageSize(parseInt(e.target.value))}
+									>
+										{[3, 6, 9].map((pSize) => (
+											<option key={pSize} value={pSize}>
+												show {pSize}
+											</option>
+										))}
+									</Form.Control>
+								</Form.Group>
+								<Pagination.Item
+									onClick={() => gotoPage(0)}
+									disabled={!canPreviousPage}
+								>
+									<i className="fas fa-angle-double-left"></i>
+								</Pagination.Item>
+								<Pagination.Item
+									onClick={() => previousPage()}
+									disabled={!canPreviousPage}
+								>
+									<i className="fas fa-caret-square-left"></i>
+								</Pagination.Item>
+								<Pagination.Item
+									onClick={() => nextPage()}
+									disabled={!canNextPage}
+								>
+									<i className="fas fa-caret-square-right"></i>
+								</Pagination.Item>
+								<Pagination.Item
+									onClick={() => gotoPage(pageCount - 1)}
+									disabled={!canNextPage}
+								>
+									<i className="fas fa-angle-double-right"></i>
+								</Pagination.Item>
+							</Pagination>
+						</div>
+					)}
+				</div>
 			) : (
 				""
 			)}
@@ -97,4 +179,4 @@ const OrderDetails = () => {
 	);
 };
 
-export default OrderDetails;
+export default ProductListScreen;

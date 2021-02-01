@@ -12,6 +12,9 @@ import {
 	PRODUCT_TOP_REQUEST,
 	PRODUCT_TOP_SUCCESS,
 	PRODUCT_TOP_FAILS,
+	PRODUCT_ALL_LIST_REQUEST,
+	PRODUCT_ALL_LIST_SUCCESS,
+	PRODUCT_ALL_LIST_FAILS,
 } from "../constants/productConstant";
 
 let initStateForDetails = {
@@ -96,6 +99,23 @@ export const producTopRatedReducer = (state = { products: [] }, action) => {
 		case PRODUCT_TOP_FAILS:
 			return { loading: false, error: action.payload };
 
+		default:
+			return state;
+	}
+};
+
+export const productListALLReducer = (state = { products: [] }, action) => {
+	switch (action.type) {
+		case PRODUCT_ALL_LIST_REQUEST:
+			return { loading: true };
+		case PRODUCT_ALL_LIST_SUCCESS:
+			return {
+				loading: false,
+				products: action.payload,
+			};
+
+		case PRODUCT_ALL_LIST_FAILS:
+			return { loading: false, error: action.payload };
 		default:
 			return state;
 	}

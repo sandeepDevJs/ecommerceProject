@@ -12,6 +12,9 @@ import {
 	PRODUCT_TOP_FAILS,
 	PRODUCT_TOP_REQUEST,
 	PRODUCT_TOP_SUCCESS,
+	PRODUCT_ALL_LIST_REQUEST,
+	PRODUCT_ALL_LIST_FAILS,
+	PRODUCT_ALL_LIST_SUCCESS,
 } from "../constants/productConstant";
 
 export const listProducts = (keyword = "", page = 0) => async (dispatch) => {
@@ -105,6 +108,27 @@ export const listTopProducts = () => async (dispatch) => {
 	} catch (err) {
 		dispatch({
 			type: PRODUCT_TOP_FAILS,
+			payload:
+				err.response && err.response.data.message
+					? err.response.data.message
+					: err.message,
+		});
+	}
+};
+
+export const listAllProducts = () => async (dispatch) => {
+	try {
+		dispatch({ type: PRODUCT_ALL_LIST_REQUEST });
+		const { data } = await axios.get(
+			`http://localhost:4000/api/products?limit=100`
+		);
+		dispatch({
+			type: PRODUCT_ALL_LIST_SUCCESS,
+			payload: data.data,
+		});
+	} catch (err) {
+		dispatch({
+			type: PRODUCT_ALL_LIST_FAILS,
 			payload:
 				err.response && err.response.data.message
 					? err.response.data.message
