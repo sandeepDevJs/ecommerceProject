@@ -8,6 +8,7 @@ import {
 	productReviewCreateReducer,
 	producTopRatedReducer,
 	productListALLReducer,
+	productDelteReducer,
 } from "./reducers/productReducer";
 
 import {
@@ -54,6 +55,7 @@ const reducer = combineReducers({
 	adminUserAllUser: userAllUsersReducer,
 	adminGetAllOrderDetailsByUserId: getAllOrderDetailsListByIdReducer,
 	adminAllProductList: productListALLReducer,
+	adminDeleteProduct: productDelteReducer,
 	shippingDetails: shippingReducer,
 	orderCreate: orderCreateReducer,
 	orderDetails: orderDetailsReducer,

@@ -8,6 +8,7 @@ const SideNavs = () => {
 			<Navbar
 				style={{
 					backgroundColor: "#f6f6f6",
+					borderRight: "2px solid black",
 				}}
 			>
 				<Navbar.Toggle aria-controls="basic-navbar-nav" />

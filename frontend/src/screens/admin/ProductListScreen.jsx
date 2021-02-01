@@ -1,10 +1,10 @@
 import React, { useEffect, useMemo } from "react";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
-import { Table, Pagination, Form } from "react-bootstrap";
+import { Table, Pagination, Form, Image, Button } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
-import { listAllProducts } from "../../actions/productActions";
-import { PRODUCTS } from "../../utils/columns";
+import { listAllProducts, deleteProduct } from "../../actions/productActions";
+import { PRODUCT_DELETE_RESET } from "../../constants/productConstant";
 import {
 	useTable,
 	useSortBy,
@@ -20,9 +20,93 @@ const ProductListScreen = () => {
 		(state) => state.adminAllProductList
 	);
 
+	const {
+		loading: deleteProdutLoading,
+		error: deleteProdutError,
+		success: deleteProdutSuccess,
+	} = useSelector((state) => state.adminDeleteProduct);
+
+	const handleClick = () => {
+		alert("working!s");
+	};
+
+	const deleteProductOnClick = (pid) => {
+		dispatch(deleteProduct(pid));
+	};
+
+	const PRODUCTS = [
+		{
+			Header: "Image",
+			accessor: "product_image",
+			sortable: false,
+			filterable: false,
+			Cell: ({ cell }) => (
+				<Image
+					src={cell.row.values.product_image}
+					alt={cell.row.values.title}
+					fluid
+					rounded
+				/>
+			),
+		},
+		{
+			Header: "Title",
+			accessor: "title",
+		},
+
+		{
+			Header: "Description",
+			accessor: "description",
+			Cell: ({ cell }) => `${cell.row.values.description.substring(0, 30)}...`,
+		},
+		{
+			Header: "Category",
+			accessor: "category",
+		},
+		{
+			Header: "Subcategory",
+			accessor: "subcategory",
+		},
+
+		{
+			Header: "Price",
+			accessor: "pricing.price",
+		},
+		{
+			Header: "rating",
+			accessor: "avgRating",
+		},
+
+		{
+			Header: "Update",
+			Cell: ({ cell }) => (
+				<Button size="sm" variant="success" onClick={() => handleClick()}>
+					<i className="fas fa-edit"></i>
+				</Button>
+			),
+		},
+		{
+			Header: "Delete",
+			accessor: "_id",
+			Cell: ({ cell }) => (
+				<Button
+					type="button"
+					size="sm"
+					variant="danger"
+					onClick={() => deleteProductOnClick(cell.row.values._id)}
+				>
+					<i className="fas fa-trash-alt"></i>
+				</Button>
+			),
+		},
+	];
+
 	useEffect(() => {
+		if (deleteProdutSuccess) {
+			dispatch({ type: PRODUCT_DELETE_RESET });
+		}
 		dispatch(listAllProducts());
-	}, [dispatch]);
+	}, [dispatch, deleteProdutSuccess]);
 
 	const columns = useMemo(() => PRODUCTS, []);
 	const data = useMemo(() => (products ? products : []), [products]);
@@ -68,6 +152,10 @@ const ProductListScreen = () => {
 					{loading ? <Loader /> : <h1>Products List</h1>}
 					{products && (
 						<div>
+							{deleteProdutError && (
+								<Message variant="danger">{deleteProdutError}</Message>
+							)}
+							{deleteProdutLoading && <Loader />}
 							<GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
 							<Table
 								variant="dark"

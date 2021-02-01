@@ -15,6 +15,10 @@ import {
 	PRODUCT_ALL_LIST_REQUEST,
 	PRODUCT_ALL_LIST_SUCCESS,
 	PRODUCT_ALL_LIST_FAILS,
+	PRODUCT_DELETE_REQUEST,
+	PRODUCT_DELETE_SUCCESS,
+	PRODUCT_DELETE_FAILS,
+	PRODUCT_DELETE_RESET,
 } from "../constants/productConstant";
 
 let initStateForDetails = {
@@ -116,6 +120,27 @@ export const productListALLReducer = (state = { products: [] }, action) => {
 
 		case PRODUCT_ALL_LIST_FAILS:
 			return { loading: false, error: action.payload };
+		default:
+			return state;
+	}
+};
+
+export const productDelteReducer = (state = { products: [] }, action) => {
+	switch (action.type) {
+		case PRODUCT_DELETE_REQUEST:
+			return { loading: true };
+		case PRODUCT_DELETE_SUCCESS:
+			return {
+				loading: false,
+				success: true,
+			};
+
+		case PRODUCT_DELETE_FAILS:
+			return { loading: false, success: false, error: action.payload };
+
+		case PRODUCT_DELETE_RESET:
+			return {};
+
 		default:
 			return state;
 	}

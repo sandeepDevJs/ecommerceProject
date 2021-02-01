@@ -15,6 +15,9 @@ import {
 	PRODUCT_ALL_LIST_REQUEST,
 	PRODUCT_ALL_LIST_FAILS,
 	PRODUCT_ALL_LIST_SUCCESS,
+	PRODUCT_DELETE_REQUEST,
+	PRODUCT_DELETE_SUCCESS,
+	PRODUCT_DELETE_FAILS,
 } from "../constants/productConstant";
 
 export const listProducts = (keyword = "", page = 0) => async (dispatch) => {
@@ -129,6 +132,38 @@ export const listAllProducts = () => async (dispatch) => {
 	} catch (err) {
 		dispatch({
 			type: PRODUCT_ALL_LIST_FAILS,
+			payload:
+				err.response && err.response.data.message
+					? err.response.data.message
+					: err.message,
+		});
+	}
+};
+
+export const deleteProduct = (pid) => async (dispatch, getState) => {
+	dispatch({ type: PRODUCT_DELETE_REQUEST });
+	const {
+		userLogin: { userInfo },
+	} = getState();
+
+	const config = {
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${userInfo.token}`,
+		},
+	};
+	try {
+		const { data } = await axios.delete(
+			`http://localhost:4000/api/products/${pid}`,
+			config
+		);
+		dispatch({
+			type: PRODUCT_DELETE_SUCCESS,
+			payload: data.data,
+		});
+	} catch (err) {
+		dispatch({
+			type: PRODUCT_DELETE_FAILS,
 			payload:
 				err.response && err.response.data.message
 					? err.response.data.message
