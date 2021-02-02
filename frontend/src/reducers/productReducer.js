@@ -19,6 +19,10 @@ import {
 	PRODUCT_DELETE_SUCCESS,
 	PRODUCT_DELETE_FAILS,
 	PRODUCT_DELETE_RESET,
+	PRODUCT_UPDATE_REQUEST,
+	PRODUCT_UPDATE_SUCCESS,
+	PRODUCT_UPDATE_FAILS,
+	PRODUCT_UPDATE_RESET,
 } from "../constants/productConstant";
 
 let initStateForDetails = {
@@ -31,6 +35,10 @@ let initStateForDetails = {
 	category: "Electronics",
 	pricing: {
 		price: 29.99,
+	},
+	manufacture_details: {
+		model_number: "",
+		release_date: "12/1/20",
 	},
 	countInStock: 0,
 	rating: 4,
@@ -139,6 +147,27 @@ export const productDelteReducer = (state = { products: [] }, action) => {
 			return { loading: false, success: false, error: action.payload };
 
 		case PRODUCT_DELETE_RESET:
+			return {};
+
+		default:
+			return state;
+	}
+};
+
+export const productUpdateReducer = (state = { products: [] }, action) => {
+	switch (action.type) {
+		case PRODUCT_UPDATE_REQUEST:
+			return { loading: true };
+		case PRODUCT_UPDATE_SUCCESS:
+			return {
+				loading: false,
+				success: true,
+			};
+
+		case PRODUCT_UPDATE_FAILS:
+			return { loading: false, success: false, error: action.payload };
+
+		case PRODUCT_UPDATE_RESET:
 			return {};
 
 		default:

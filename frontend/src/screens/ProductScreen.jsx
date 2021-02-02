@@ -54,7 +54,6 @@ const ProductScreen = ({ match }) => {
 	} = productCreateReview;
 
 	const { userInfo } = useSelector((state) => state.userLogin);
-	console.log("userInfo", userInfo);
 
 	useEffect(() => {
 		if (successCreateReview) {
@@ -255,7 +254,6 @@ const ProductScreen = ({ match }) => {
 												<FormGroup>
 													<Field
 														as="textarea"
-														controlId="comment"
 														row={3}
 														name="comment"
 														placeholder="Write A Review..."

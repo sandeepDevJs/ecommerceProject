@@ -18,6 +18,9 @@ import {
 	PRODUCT_DELETE_REQUEST,
 	PRODUCT_DELETE_SUCCESS,
 	PRODUCT_DELETE_FAILS,
+	PRODUCT_UPDATE_REQUEST,
+	PRODUCT_UPDATE_SUCCESS,
+	PRODUCT_UPDATE_FAILS,
 } from "../constants/productConstant";
 
 export const listProducts = (keyword = "", page = 0) => async (dispatch) => {
@@ -164,6 +167,34 @@ export const deleteProduct = (pid) => async (dispatch, getState) => {
 	} catch (err) {
 		dispatch({
 			type: PRODUCT_DELETE_FAILS,
+			payload:
+				err.response && err.response.data.message
+					? err.response.data.message
+					: err.message,
+		});
+	}
+};
+
+export const updateProduct = (pid, fdata) => async (dispatch, getState) => {
+	dispatch({ type: PRODUCT_UPDATE_REQUEST });
+	const {
+		userLogin: { userInfo },
+	} = getState();
+
+	const config = {
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${userInfo.token}`,
+		},
+	};
+	try {
+		await axios.put(`http://localhost:4000/api/products/${pid}`, fdata, config);
+		dispatch({
+			type: PRODUCT_UPDATE_SUCCESS,
+		});
+	} catch (err) {
+		dispatch({
+			type: PRODUCT_UPDATE_FAILS,
 			payload:
 				err.response && err.response.data.message
 					? err.response.data.message

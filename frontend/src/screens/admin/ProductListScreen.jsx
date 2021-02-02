@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import { Table, Pagination, Form, Image, Button } from "react-bootstrap";
@@ -12,10 +12,10 @@ import {
 	usePagination,
 } from "react-table";
 import GlobalFilter from "../../components/GlobalFilter";
-import { Toast, ConfirmSwal } from "../../utils/sweetAlert2";
+import { Toast } from "../../utils/sweetAlert2";
 import Swal from "sweetalert2";
 
-const ProductListScreen = () => {
+const ProductListScreen = ({ history }) => {
 	const dispatch = useDispatch();
 
 	const { loading, error, products } = useSelector(
@@ -28,23 +28,8 @@ const ProductListScreen = () => {
 		success: deleteProdutSuccess,
 	} = useSelector((state) => state.adminDeleteProduct);
 
-	const handleClick = () => {
-		Swal.fire({
-			title: "Are you sure?",
-			text: "You won't be able to revert this!",
-			icon: "warning",
-			showCancelButton: true,
-			confirmButtonColor: "#3085d6",
-			cancelButtonColor: "#d33",
-			confirmButtonText: "Yes, delete it!",
-		}).then((result) => {
-			if (result.isConfirmed) {
-				Toast.fire({
-					icon: "success",
-					title: "Data Delete Successfully!",
-				});
-			}
-		});
+	const handleClick = (slug) => {
+		history.push(`/admin/products/edit/${slug}`);
 	};
 
 	const deleteProductOnClick = (pid) => {
@@ -67,7 +52,18 @@ const ProductListScreen = () => {
 		});
 	};
 
-	const PRODUCTS = [
+	useEffect(() => {
+		if (deleteProdutSuccess) {
+			dispatch({ type: PRODUCT_DELETE_RESET });
+		}
+		dispatch(listAllProducts());
+	}, [dispatch, deleteProdutSuccess]);
+
+	useEffect(() => {
+		dispatch({ type: PRODUCT_DELETE_RESET });
+	}, [dispatch]);
+
+	const PRODUCTS = useRef([
 		{
 			Header: "Image",
 			accessor: "product_image",
@@ -112,8 +108,13 @@ const ProductListScreen = () => {
 
 		{
 			Header: "Update",
+			accessor: "slug",
 			Cell: ({ cell }) => (
-				<Button size="sm" variant="success" onClick={() => handleClick()}>
+				<Button
+					size="sm"
+					variant="success"
+					onClick={() => handleClick(cell.row.values.slug)}
+				>
 					<i className="fas fa-edit"></i>
 				</Button>
 			),
@@ -132,16 +133,9 @@ const ProductListScreen = () => {
 				</Button>
 			),
 		},
-	];
+	]);
 
-	useEffect(() => {
-		if (deleteProdutSuccess) {
-			dispatch({ type: PRODUCT_DELETE_RESET });
-		}
-		dispatch(listAllProducts());
-	}, [dispatch, deleteProdutSuccess]);
-
-	const columns = useMemo(() => PRODUCTS, []);
+	const columns = useMemo(() => PRODUCTS.current, [PRODUCTS]);
 	const data = useMemo(() => (products ? products : []), [products]);
 
 	const {
