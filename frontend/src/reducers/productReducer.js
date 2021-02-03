@@ -33,12 +33,13 @@ let initStateForDetails = {
 		"Meet Echo Dot - Our most popular smart speaker with a fabric design. It is our most compact smart speaker that fits perfectly into small space",
 	brand: "Amazon",
 	category: "Electronics",
+	subcategory: { _id: 0 },
 	pricing: {
 		price: 29.99,
 	},
 	manufacture_details: {
 		model_number: "",
-		release_date: "12/1/20",
+		release_date: "2010-10-09T18:30:00.000Z",
 	},
 	countInStock: 0,
 	rating: 4,
@@ -47,7 +48,12 @@ let initStateForDetails = {
 };
 
 export const productListReducer = (
-	state = { products: [], pagination: { page: 0 } },
+	state = {
+		products: [
+			{ pricing: { price: 0 }, category: { _id: 0 }, subcategory: { _id: 0 } },
+		],
+		pagination: { page: 0 },
+	},
 	action
 ) => {
 	switch (action.type) {
@@ -78,7 +84,7 @@ export const productDetailsReducer = (
 			return { loading: false, product: action.payload };
 
 		case PRODUCT_DETAILS_FAILS:
-			return { loading: false, error: action.payload };
+			return { ...state, loading: false, error: action.payload };
 		default:
 			return state;
 	}

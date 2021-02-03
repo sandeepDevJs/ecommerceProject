@@ -38,6 +38,8 @@ import {
 	orderListMyReducer,
 } from "./reducers/orderReducers";
 
+import { getCatReducer, getCatsByIdReducer } from "./reducers/categoryReducers";
+
 const reducer = combineReducers({
 	productList: productListReducer,
 	productDetails: productDetailsReducer,
@@ -58,6 +60,8 @@ const reducer = combineReducers({
 	adminAllProductList: productListALLReducer,
 	adminDeleteProduct: productDelteReducer,
 	adminUpdateProduct: productUpdateReducer,
+	catList: getCatReducer,
+	catById: getCatsByIdReducer,
 	shippingDetails: shippingReducer,
 	orderCreate: orderCreateReducer,
 	orderDetails: orderDetailsReducer,

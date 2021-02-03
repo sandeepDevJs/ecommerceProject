@@ -91,10 +91,12 @@ const ProductListScreen = ({ history }) => {
 		{
 			Header: "Category",
 			accessor: "category",
+			Cell: ({ cell }) => `${cell.row.values.category.category}`,
 		},
 		{
 			Header: "Subcategory",
 			accessor: "subcategory",
+			Cell: ({ cell }) => `${cell.row.values.subcategory.subcategory}`,
 		},
 
 		{

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FormControl, FormGroup, FormLabel } from "react-bootstrap";
+import { FormControl, FormGroup } from "react-bootstrap";
 import { useAsyncDebounce } from "react-table";
 
 const GlobalFilter = ({ filter, setFilter }) => {

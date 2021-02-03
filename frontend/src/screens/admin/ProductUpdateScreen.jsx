@@ -1,16 +1,27 @@
-import React, { useState, useEffect } from "react";
-import { Row, Col, FormGroup, Button, Image, FormLabel } from "react-bootstrap";
+import React, { useState, useEffect, useRef } from "react";
+import {
+	Row,
+	Col,
+	FormGroup,
+	Button,
+	Image,
+	FormLabel,
+	Modal,
+} from "react-bootstrap";
 import { Form, Formik, ErrorMessage, Field } from "formik";
 import { useDispatch, useSelector } from "react-redux";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
-import { listProductDetails } from "../../actions/productActions";
+import Datepicker from "../../components/Datepicker";
+import {
+	listProductDetails,
+	updateProduct,
+} from "../../actions/productActions";
+import { PRODUCT_UPDATE_RESET } from "../../constants/productConstant";
+import { fetchCats, fetchCatsByIds } from "../../actions/categoryAction";
 import * as Yup from "yup";
-import { format } from "date-fns";
 
 const ProductUpdateScreen = ({ match }) => {
-	const [file, setfile] = useState();
-
 	const validationSchema = Yup.object({
 		title: Yup.string()
 			.min(4, "Title Must At Least Contain 4 Characters")
@@ -51,25 +62,66 @@ const ProductUpdateScreen = ({ match }) => {
 		(state) => state.productDetails
 	);
 
+	const { cats } = useSelector((state) => state.catList);
+
+	const { success: updateSuccess, loading: updateLoading } = useSelector(
+		(state) => state.adminUpdateProduct
+	);
+
+	const { cats: catById } = useSelector((state) => state.catById);
+
 	useEffect(() => {
+		if (updateSuccess) {
+			dispatch({ type: PRODUCT_UPDATE_RESET });
+		}
 		dispatch(listProductDetails(match.params.slug));
-		console.log("use Effect ran!");
-	}, [dispatch, match]);
+		dispatch(fetchCats());
+	}, [dispatch, match, updateSuccess]);
+
+	useEffect(() => {
+		dispatch({ type: PRODUCT_UPDATE_RESET });
+	}, [dispatch]);
+
+	useEffect(() => {
+		if (!catById._id) {
+			dispatch(fetchCatsByIds(product.category._id));
+		}
+	}, [dispatch, catById, product]);
 
 	const initialValues = {
-		...product,
+		product_image: product.product_image,
+		quantity: product.quantity,
+		title: product.title,
+		description: product.description,
+		pricing: {
+			price: product.pricing.price,
+		},
+		category: product.category._id,
+		subcategory: product.subcategory._id,
+		manufacture_details: {
+			release_date: new Date(product.manufacture_details.release_date),
+			model_number: product.manufacture_details.model_number,
+		},
 	};
 
-	const onSubmitHandler = () => {
-		let data = new FormData();
-		data.append("produc", "hello");
-		console.log(file);
+	const onSubmitHandler = (values) => {
+		let fdata = new FormData();
+		fdata.append("");
+		dispatch(updateProduct(product._id, values));
+		console.log("on submi", values);
 	};
+
+	const [show, setShow] = useState(false);
+
+	const handleClose = () => setShow(false);
+	const handleShow = () => setShow(true);
+	// console.log("cats ", cats);
+	// console.log("cats by id ", catById);
 
 	return (
 		<div>
 			<h1> Edit Product Details </h1>
-			{loading && <Loader />}
+			{(loading || updateLoading) && <Loader />}
 			{error ? (
 				<Message variant="danger">{error}</Message>
 			) : (
@@ -84,16 +136,23 @@ const ProductUpdateScreen = ({ match }) => {
 							<Col md={3}>
 								<Image src={product.product_image} alt="" fluid rounded />
 
-								<input
-									type="file"
-									placeholder="Enter Email"
-									className="form-control"
-									name="product_image"
-									accept="image/*"
-									onChange={(event) => {
-										setfile(event.target.files[0]);
-									}}
-								/>
+								<Button onClick={handleShow}>Change Image</Button>
+								<Modal show={show} onHide={handleClose}>
+									<Modal.Header closeButton>
+										<Modal.Title>Upload Image</Modal.Title>
+									</Modal.Header>
+									<Modal.Body>
+										Woohoo, you're reading this text in a modal!
+									</Modal.Body>
+									<Modal.Footer>
+										<Button variant="secondary" onClick={handleClose}>
+											Close
+										</Button>
+										<Button variant="primary" onClick={handleClose}>
+											Save Changes
+										</Button>
+									</Modal.Footer>
+								</Modal>
 							</Col>
 							<Col md={9}>
 								<Row>
@@ -138,20 +197,10 @@ const ProductUpdateScreen = ({ match }) => {
 											</ErrorMessage>
 										</FormGroup>
 										<FormGroup>
-											<FormLabel>Release Date</FormLabel>
-											<Field>
-												{(props) => {
-													let { field } = props;
-													return (
-														<input
-															type="date"
-															className="form-control"
-															{...field}
-															name="manufacture_details.release_date"
-														/>
-													);
-												}}
-											</Field>
+											<Datepicker
+												label="Release Date"
+												name="manufacture_details.release_date"
+											/>
 											<ErrorMessage name="manufacture_details.release_date">
 												{(errMsg) => (
 													<Message variant="danger">{errMsg}</Message>
@@ -162,11 +211,28 @@ const ProductUpdateScreen = ({ match }) => {
 									<Col md={5}>
 										<FormGroup>
 											<FormLabel>category</FormLabel>
-											<Field
-												type="text"
-												name="category"
-												className="form-control"
-											/>
+											<Field name="category">
+												{({ form, field }) => {
+													const { setFieldValue } = form;
+													const { value } = field;
+													return (
+														<select
+															value={value}
+															className="form-control"
+															onChange={(e) => {
+																setFieldValue("category", e.target.value);
+																dispatch(fetchCatsByIds(e.target.value));
+															}}
+														>
+															{cats.map((ct) => (
+																<option key={ct._id} value={ct._id}>
+																	{ct.category}
+																</option>
+															))}
+														</select>
+													);
+												}}
+											</Field>
 											<ErrorMessage name="category">
 												{(errMsg) => (
 													<Message variant="danger">{errMsg}</Message>
@@ -175,11 +241,31 @@ const ProductUpdateScreen = ({ match }) => {
 										</FormGroup>
 										<FormGroup>
 											<FormLabel>Subcategory</FormLabel>
-											<Field
-												type="text"
-												name="subcategory"
-												className="form-control"
-											/>
+											<Field name="subcategory">
+												{({ form, field }) => {
+													const { setFieldValue } = form;
+													const { value } = field;
+													return (
+														<select
+															value={value}
+															className="form-control"
+															name="subcategory"
+															onChange={(e) => {
+																setFieldValue("subcategory", e.target.value);
+															}}
+														>
+															<option key={0} value={0}>
+																select subctegory
+															</option>
+															{catById.subcategories.map((ct) => (
+																<option key={ct._id} value={ct._id}>
+																	{ct.subcategory}
+																</option>
+															))}
+														</select>
+													);
+												}}
+											</Field>
 											<ErrorMessage name="subcategory">
 												{(errMsg) => (
 													<Message variant="danger">{errMsg}</Message>
