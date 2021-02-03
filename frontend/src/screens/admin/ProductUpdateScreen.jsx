@@ -16,8 +16,12 @@ import Datepicker from "../../components/Datepicker";
 import {
 	listProductDetails,
 	updateProduct,
+	updateImageProduct,
 } from "../../actions/productActions";
-import { PRODUCT_UPDATE_RESET } from "../../constants/productConstant";
+import {
+	PRODUCT_UPDATE_RESET,
+	PRODUCT_IMAGE_UPDATE_RESET,
+} from "../../constants/productConstant";
 import { fetchCats, fetchCatsByIds } from "../../actions/categoryAction";
 import * as Yup from "yup";
 
@@ -68,15 +72,25 @@ const ProductUpdateScreen = ({ match }) => {
 		(state) => state.adminUpdateProduct
 	);
 
+	const {
+		loading: imageUpdateLoading,
+		error: imageUpdateError,
+		success: imageUpdateSuccess,
+	} = useSelector((state) => state.updateImage);
+
 	const { cats: catById } = useSelector((state) => state.catById);
 
 	useEffect(() => {
 		if (updateSuccess) {
 			dispatch({ type: PRODUCT_UPDATE_RESET });
 		}
+		if (imageUpdateSuccess) {
+			dispatch({ type: PRODUCT_IMAGE_UPDATE_RESET });
+			handleClose();
+		}
 		dispatch(listProductDetails(match.params.slug));
 		dispatch(fetchCats());
-	}, [dispatch, match, updateSuccess]);
+	}, [dispatch, match, updateSuccess, imageUpdateSuccess]);
 
 	useEffect(() => {
 		dispatch({ type: PRODUCT_UPDATE_RESET });
@@ -112,9 +126,18 @@ const ProductUpdateScreen = ({ match }) => {
 	};
 
 	const [show, setShow] = useState(false);
+	const [file, setfile] = useState();
 
 	const handleClose = () => setShow(false);
 	const handleShow = () => setShow(true);
+	const handleImageSub = (e) => {
+		let fdata = new FormData();
+		fdata.append("product_image", file);
+		console.log(fdata);
+		dispatch(updateImageProduct(product._id, fdata));
+		// handleClose();
+	};
+
 	// console.log("cats ", cats);
 	// console.log("cats by id ", catById);
 
@@ -140,15 +163,20 @@ const ProductUpdateScreen = ({ match }) => {
 								<Modal show={show} onHide={handleClose}>
 									<Modal.Header closeButton>
 										<Modal.Title>Upload Image</Modal.Title>
+										{imageUpdateLoading && <Loader />}
+										{imageUpdateError && <Message>{imageUpdateError}</Message>}
 									</Modal.Header>
 									<Modal.Body>
-										Woohoo, you're reading this text in a modal!
+										<input
+											type="file"
+											onChange={(e) => setfile(e.target.files[0])}
+										/>
 									</Modal.Body>
 									<Modal.Footer>
 										<Button variant="secondary" onClick={handleClose}>
 											Close
 										</Button>
-										<Button variant="primary" onClick={handleClose}>
+										<Button variant="primary" onClick={handleImageSub}>
 											Save Changes
 										</Button>
 									</Modal.Footer>

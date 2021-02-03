@@ -23,6 +23,10 @@ import {
 	PRODUCT_UPDATE_SUCCESS,
 	PRODUCT_UPDATE_FAILS,
 	PRODUCT_UPDATE_RESET,
+	PRODUCT_IMAGE_UPDATE_SUCCESS,
+	PRODUCT_IMAGE_UPDATE_FAILS,
+	PRODUCT_IMAGE_UPDATE_RESET,
+	PRODUCT_IMAGE_UPDATE_REQUEST,
 } from "../constants/productConstant";
 
 let initStateForDetails = {
@@ -174,6 +178,27 @@ export const productUpdateReducer = (state = { products: [] }, action) => {
 			return { loading: false, success: false, error: action.payload };
 
 		case PRODUCT_UPDATE_RESET:
+			return {};
+
+		default:
+			return state;
+	}
+};
+
+export const productImageUpdateReducer = (state = {}, action) => {
+	switch (action.type) {
+		case PRODUCT_IMAGE_UPDATE_REQUEST:
+			return { loading: true };
+		case PRODUCT_IMAGE_UPDATE_SUCCESS:
+			return {
+				loading: false,
+				success: true,
+			};
+
+		case PRODUCT_IMAGE_UPDATE_FAILS:
+			return { loading: false, success: false, error: action.payload };
+
+		case PRODUCT_IMAGE_UPDATE_RESET:
 			return {};
 
 		default:

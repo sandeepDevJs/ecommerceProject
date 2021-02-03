@@ -21,6 +21,9 @@ import {
 	PRODUCT_UPDATE_REQUEST,
 	PRODUCT_UPDATE_SUCCESS,
 	PRODUCT_UPDATE_FAILS,
+	PRODUCT_IMAGE_UPDATE_REQUEST,
+	PRODUCT_IMAGE_UPDATE_FAILS,
+	PRODUCT_IMAGE_UPDATE_SUCCESS,
 } from "../constants/productConstant";
 
 export const listProducts = (keyword = "", page = 0) => async (dispatch) => {
@@ -195,6 +198,41 @@ export const updateProduct = (pid, fdata) => async (dispatch, getState) => {
 	} catch (err) {
 		dispatch({
 			type: PRODUCT_UPDATE_FAILS,
+			payload:
+				err.response && err.response.data.message
+					? err.response.data.message
+					: err.message,
+		});
+	}
+};
+
+export const updateImageProduct = (pid, fdata) => async (
+	dispatch,
+	getState
+) => {
+	dispatch({ type: PRODUCT_IMAGE_UPDATE_REQUEST });
+	const {
+		userLogin: { userInfo },
+	} = getState();
+
+	const config = {
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${userInfo.token}`,
+		},
+	};
+	try {
+		await axios.put(
+			`http://localhost:4000/api/products/updateImage/${pid}`,
+			fdata,
+			config
+		);
+		dispatch({
+			type: PRODUCT_IMAGE_UPDATE_SUCCESS,
+		});
+	} catch (err) {
+		dispatch({
+			type: PRODUCT_IMAGE_UPDATE_FAILS,
 			payload:
 				err.response && err.response.data.message
 					? err.response.data.message

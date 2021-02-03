@@ -10,6 +10,7 @@ import {
 	productListALLReducer,
 	productDelteReducer,
 	productUpdateReducer,
+	productImageUpdateReducer,
 } from "./reducers/productReducer";
 
 import {
@@ -62,6 +63,7 @@ const reducer = combineReducers({
 	adminUpdateProduct: productUpdateReducer,
 	catList: getCatReducer,
 	catById: getCatsByIdReducer,
+	updateImage: productImageUpdateReducer,
 	shippingDetails: shippingReducer,
 	orderCreate: orderCreateReducer,
 	orderDetails: orderDetailsReducer,
