@@ -119,10 +119,7 @@ const ProductUpdateScreen = ({ match }) => {
 	};
 
 	const onSubmitHandler = (values) => {
-		let fdata = new FormData();
-		fdata.append("");
 		dispatch(updateProduct(product._id, values));
-		console.log("on submi", values);
 	};
 
 	const [show, setShow] = useState(false);
@@ -159,7 +156,9 @@ const ProductUpdateScreen = ({ match }) => {
 							<Col md={3}>
 								<Image src={product.product_image} alt="" fluid rounded />
 
-								<Button onClick={handleShow}>Change Image</Button>
+								<Button className="btn btn-block" onClick={handleShow}>
+									Change Image
+								</Button>
 								<Modal show={show} onHide={handleClose}>
 									<Modal.Header closeButton>
 										<Modal.Title>Upload Image</Modal.Title>

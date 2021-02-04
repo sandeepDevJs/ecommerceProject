@@ -6,6 +6,7 @@ import OrderDetailsScreen from "./OrderDetails";
 import SingleOrderDetailsScreen from "./SingleOrderDetails";
 import ProductListScreen from "./ProductListScreen";
 import ProductUpdateScreen from "./ProductUpdateScreen";
+import CategoryListScreen from "./CategoryListScreen";
 import SideNavs from "./SideNavs";
 import { Row, Col } from "react-bootstrap";
 
@@ -35,6 +36,11 @@ const AdminScreens = () => {
 							exact
 							path="/admin/products/edit/:slug"
 							component={ProductUpdateScreen}
+						/>
+						<Route
+							exact
+							path="/admin/categories"
+							component={CategoryListScreen}
 						/>
 					</Container>
 				</Col>
