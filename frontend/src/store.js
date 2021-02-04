@@ -39,7 +39,12 @@ import {
 	orderListMyReducer,
 } from "./reducers/orderReducers";
 
-import { getCatReducer, getCatsByIdReducer } from "./reducers/categoryReducers";
+import {
+	getCatReducer,
+	getCatsByIdReducer,
+	deleteCatReducer,
+	updateCatReducer,
+} from "./reducers/categoryReducers";
 
 const reducer = combineReducers({
 	productList: productListReducer,
@@ -63,6 +68,8 @@ const reducer = combineReducers({
 	adminUpdateProduct: productUpdateReducer,
 	catList: getCatReducer,
 	catById: getCatsByIdReducer,
+	deleteCat: deleteCatReducer,
+	updateCat: updateCatReducer,
 	updateImage: productImageUpdateReducer,
 	shippingDetails: shippingReducer,
 	orderCreate: orderCreateReducer,

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Table, Button, Form, Pagination } from "react-bootstrap";
-import { fetchCats } from "../../actions/categoryAction";
+import { fetchCats, deleteCat, updateCat } from "../../actions/categoryAction";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import GlobalFilter from "../../components/GlobalFilter";
@@ -11,6 +11,12 @@ import {
 	useGlobalFilter,
 	usePagination,
 } from "react-table";
+import {
+	CAT_DELETE_RESET,
+	CAT_UPDATE_RESET,
+} from "../../constants/categoryConstants";
+import { Toast } from "../../utils/sweetAlert2";
+import Swal from "sweetalert2";
 
 const CategoryListScreen = () => {
 	const CATEGORY_COLUMNS = useRef([
@@ -22,7 +28,11 @@ const CategoryListScreen = () => {
 			Header: "Update",
 			// accessor: "_id",
 			Cell: ({ cell }) => (
-				<Button size="sm" variant="success" onClick={() => cell.row.values._id}>
+				<Button
+					size="sm"
+					variant="success"
+					onClick={() => updateCatHandler(cell.row.values._id)}
+				>
 					<i className="fas fa-edit"></i>
 				</Button>
 			),
@@ -35,7 +45,7 @@ const CategoryListScreen = () => {
 					type="button"
 					size="sm"
 					variant="danger"
-					onClick={() => cell.row.values._id}
+					onClick={() => deleteCategoryHandler(cell.row.values._id)}
 				>
 					<i className="fas fa-trash-alt"></i>
 				</Button>
@@ -44,10 +54,32 @@ const CategoryListScreen = () => {
 	]);
 
 	const { loading, cats, error } = useSelector((state) => state.catList);
+	const {
+		loading: deleteCatLoading,
+		success: deleteCatSuccess,
+		error: deleteCatError,
+	} = useSelector((state) => state.deleteCat);
+
+	const {
+		loading: updateCatLoading,
+		success: updateCatSuccess,
+		error: updateCatError,
+	} = useSelector((state) => state.updateCat);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
+		if (deleteCatSuccess) {
+			dispatch({ type: CAT_DELETE_RESET });
+		}
+		if (updateCatSuccess) {
+			dispatch({ type: CAT_UPDATE_RESET });
+		}
 		dispatch(fetchCats());
+	}, [dispatch, deleteCatSuccess, updateCatSuccess]);
+
+	useEffect(() => {
+		dispatch({ type: CAT_DELETE_RESET });
+		dispatch({ type: CAT_UPDATE_RESET });
 	}, [dispatch]);
 
 	const categoryColumns = useMemo(() => CATEGORY_COLUMNS.current, [
@@ -84,12 +116,72 @@ const CategoryListScreen = () => {
 
 	const { globalFilter, pageIndex, pageSize } = state;
 
+	const deleteCategoryHandler = (catId) => {
+		Swal.fire({
+			title: "Are you sure?",
+			text: "You won't be able to revert this!",
+			icon: "warning",
+			showCancelButton: true,
+			confirmButtonColor: "#3085d6",
+			cancelButtonColor: "#d33",
+			confirmButtonText: "Yes, delete it!",
+		}).then((result) => {
+			if (result.isConfirmed) {
+				dispatch(deleteCat(catId));
+			}
+		});
+	};
+
+	const updateCatHandler = (catId) => {
+		Swal.fire({
+			title: "Category Name",
+			input: "text",
+			inputAttributes: {
+				autocapitalize: "off",
+			},
+			showCancelButton: true,
+			confirmButtonText: "Update",
+			showLoaderOnConfirm: true,
+			preConfirm: (text) => {
+				if (!text.trim().length) {
+					Swal.showValidationMessage(`Required!`);
+				} else if (text.trim().length < 3) {
+					Swal.showValidationMessage(`Too Small Name!`);
+				}
+			},
+			allowOutsideClick: () => !Swal.isLoading(),
+		}).then((result) => {
+			if (result.isConfirmed) {
+				dispatch(updateCat(catId, { category: result.value }));
+			}
+		});
+	};
+
+	if (deleteCatSuccess) {
+		Toast.fire({
+			icon: "success",
+			title: "Data Deleted Successfully!",
+		});
+	}
+
+	if (updateCatSuccess) {
+		Toast.fire({
+			icon: "success",
+			title: "Data Updated Successfully!",
+		});
+	}
+
 	return (
 		<div>
 			{loading && <Loader />}
-			{error && <Message>{error}</Message>}
+			{deleteCatLoading && <Loader />}
+			{updateCatLoading && <Loader />}
+			{error && <Message variant="danger">{error}</Message>}
+			{deleteCatError && <Message variant="danger">{deleteCatError}</Message>}
+			{updateCatError && <Message variant="danger">{updateCatError}</Message>}
 			{cats.length && (
 				<div>
+					<h1>Category List</h1>
 					<GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
 					<Table
 						variant="dark"
