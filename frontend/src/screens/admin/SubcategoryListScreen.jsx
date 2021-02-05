@@ -1,10 +1,20 @@
 import React, { useEffect, useRef, useMemo, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Table, Button, Form, Pagination, Modal } from "react-bootstrap";
+import _ from "lodash";
+import {
+	Table,
+	Button,
+	Form,
+	Pagination,
+	Modal,
+	Row,
+	Col,
+} from "react-bootstrap";
 import {
 	fetchSubCats,
 	deleteSubCat,
 	updateSubCat,
+	createSubCat,
 } from "../../actions/subcategoryActions";
 import { fetchCats } from "../../actions/categoryAction";
 import Message from "../../components/Message";
@@ -19,6 +29,7 @@ import {
 import {
 	SUBCAT_DELETE_RESET,
 	SUBCAT_UPDATE_RESET,
+	SUBCAT_CREATE_RESET,
 } from "../../constants/subcategoryConstants";
 import { Toast } from "../../utils/sweetAlert2";
 import Swal from "sweetalert2";
@@ -82,6 +93,12 @@ const SubcategoryListScreen = () => {
 		error: updateSubCatError,
 	} = useSelector((state) => state.updateSubCat);
 
+	const {
+		loading: createSubCatLoading,
+		success: createSubCatSuccess,
+		error: createSubCatError,
+	} = useSelector((state) => state.createSubCat);
+
 	const { loading: catsLoading, cats } = useSelector((state) => state.catList);
 
 	const dispatch = useDispatch();
@@ -102,12 +119,17 @@ const SubcategoryListScreen = () => {
 		if (updateSubCatSuccess) {
 			dispatch({ type: SUBCAT_UPDATE_RESET });
 		}
+		if (createSubCatSuccess) {
+			dispatch({ type: SUBCAT_CREATE_RESET });
+		}
+		dispatch(fetchCats());
 		dispatch(fetchSubCats());
-	}, [dispatch, deleteSubCatSuccess, updateSubCatSuccess]);
+	}, [dispatch, deleteSubCatSuccess, updateSubCatSuccess, createSubCatSuccess]);
 
 	useEffect(() => {
 		dispatch({ type: SUBCAT_DELETE_RESET });
 		dispatch({ type: SUBCAT_UPDATE_RESET });
+		dispatch({ type: SUBCAT_CREATE_RESET });
 	}, [dispatch]);
 
 	const categoryColumns = useMemo(() => CATEGORY_COLUMNS.current, [
@@ -161,7 +183,6 @@ const SubcategoryListScreen = () => {
 	};
 
 	const updateSubCatHandler = (subcatId, catId, subcat) => {
-		dispatch(fetchCats());
 		handleShow();
 		setSubcatSelect(catId);
 		setSubcatField(subcat);
@@ -177,21 +198,63 @@ const SubcategoryListScreen = () => {
 		handleClose();
 	};
 
-	if (deleteSubCatSuccess) {
-		Toast.fire({
-			icon: "success",
-			title: "Data Deleted Successfully!",
+	const createSubCatBtn = () => {
+		let inputOptions = {};
+		_.map(cats, function (o) {
+			inputOptions[o._id] = o.category;
+		});
+
+		console.log("input options ", inputOptions);
+		Swal.mixin({
+			confirmButtonText: "Next &rarr;",
+			showCancelButton: true,
+			progressSteps: ["1", "2"],
+		})
+			.queue([
+				{
+					title: "Subcategory Name",
+					input: "text",
+				},
+				{
+					title: "Select Category Name",
+					input: "select",
+					inputOptions,
+				},
+			])
+			.then((result) => {
+				if (result.value) {
+					let body = {
+						category_id: result.value[1],
+						subcategory: result.value[0],
+					};
+					dispatch(createSubCat(body));
+				}
+			});
+	};
+
+	if (createSubCatLoading) {
+		Swal.fire({
+			title: "Creating....",
 		});
 	}
 
-	if (updateSubCatSuccess) {
+	if (deleteSubCatSuccess || updateSubCatSuccess || createSubCatSuccess) {
+		let msg = deleteSubCatSuccess
+			? "deleted"
+			: updateSubCatSuccess
+			? "updated"
+			: createSubCatSuccess
+			? "created"
+			: "";
+
 		Toast.fire({
 			icon: "success",
-			title: "Data Updated Successfully!",
+			title: `Data ${msg} Successfully!`,
 		});
+		if (createSubCatSuccess) {
+			Swal.close();
+		}
 	}
-
-	console.log("Sub cats ", subcats);
 
 	return (
 		<div>
@@ -201,9 +264,26 @@ const SubcategoryListScreen = () => {
 			{deleteSubCatError && (
 				<Message variant="danger">{deleteSubCatError}</Message>
 			)}
+			{createSubCatError && (
+				<Message variant="danger">{createSubCatError}</Message>
+			)}
 			{subcats.length && (
 				<div>
-					<h1>Subcategory List</h1>
+					<Row>
+						<Col md={9}>
+							<h1>Subcategory List</h1>
+						</Col>
+						<Col md={3}>
+							<Button
+								style={{ float: "right" }}
+								onClick={() => {
+									createSubCatBtn();
+								}}
+							>
+								Create Subcategory
+							</Button>
+						</Col>
+					</Row>
 					<GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
 					<Table
 						variant="dark"

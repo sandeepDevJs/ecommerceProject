@@ -10,6 +10,10 @@ import {
 	SUBCAT_UPDATE_SUCCESS,
 	SUBCAT_UPDATE_FAILS,
 	SUBCAT_UPDATE_RESET,
+	SUBCAT_CREATE_REQUEST,
+	SUBCAT_CREATE_SUCCESS,
+	SUBCAT_CREATE_FAILS,
+	SUBCAT_CREATE_RESET,
 } from "../constants/subcategoryConstants";
 
 export const getSubCatReducer = (
@@ -66,6 +70,26 @@ export const updateSubCatReducer = (state = {}, action) => {
 			return { loading: false, error: action.payload };
 
 		case SUBCAT_UPDATE_RESET:
+			return {};
+		default:
+			return state;
+	}
+};
+
+export const createSubCatReducer = (state = {}, action) => {
+	switch (action.type) {
+		case SUBCAT_CREATE_REQUEST:
+			return { loading: true };
+		case SUBCAT_CREATE_SUCCESS:
+			return {
+				loading: false,
+				success: true,
+			};
+
+		case SUBCAT_CREATE_FAILS:
+			return { loading: false, error: action.payload };
+
+		case SUBCAT_CREATE_RESET:
 			return {};
 		default:
 			return state;

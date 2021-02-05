@@ -8,6 +8,9 @@ import {
 	SUBCAT_UPDATE_REQUEST,
 	SUBCAT_UPDATE_SUCCESS,
 	SUBCAT_UPDATE_FAILS,
+	SUBCAT_CREATE_REQUEST,
+	SUBCAT_CREATE_SUCCESS,
+	SUBCAT_CREATE_FAILS,
 } from "../constants/subcategoryConstants";
 import axios from "axios";
 let { token } = JSON.parse(localStorage.getItem("userInfo"));
@@ -82,4 +85,20 @@ export const updateSubCat = (subcatId, body) => async (dispatch) => {
 	}
 };
 
-//subcatList;
+export const createSubCat = (body) => async (dispatch) => {
+	try {
+		dispatch({ type: SUBCAT_CREATE_REQUEST });
+
+		await axios.post(`http://localhost:4000/api/subcategories/`, body, config);
+
+		dispatch({ type: SUBCAT_CREATE_SUCCESS });
+	} catch (err) {
+		dispatch({
+			type: SUBCAT_CREATE_FAILS,
+			payload:
+				err.response && err.response.data.message
+					? err.response.data.message
+					: err.message,
+		});
+	}
+};

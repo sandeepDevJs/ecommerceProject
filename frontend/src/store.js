@@ -50,6 +50,7 @@ import {
 	getSubCatReducer,
 	deleteSubCatReducer,
 	updateSubCatReducer,
+	createSubCatReducer,
 } from "./reducers/subcategoryReducers";
 
 const reducer = combineReducers({
@@ -79,6 +80,7 @@ const reducer = combineReducers({
 	subcatList: getSubCatReducer,
 	deleteSubCat: deleteSubCatReducer,
 	updateSubCat: updateSubCatReducer,
+	createSubCat:createSubCatReducer,
 	updateImage: productImageUpdateReducer,
 	shippingDetails: shippingReducer,
 	orderCreate: orderCreateReducer,
