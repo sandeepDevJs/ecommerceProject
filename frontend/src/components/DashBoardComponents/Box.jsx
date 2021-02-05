@@ -1,5 +1,6 @@
 import React from "react";
 import { Card, Row, Col } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 const getIcon = (iconName) => {
 	switch (iconName) {
@@ -17,7 +18,7 @@ const getIcon = (iconName) => {
 	}
 };
 
-const Box = ({ key, header, title, count, iconName }) => {
+const Box = ({ key, header, title, count }) => {
 	return (
 		<div>
 			<Card
@@ -32,13 +33,20 @@ const Box = ({ key, header, title, count, iconName }) => {
 					<Card.Title>{title}</Card.Title>
 					<Card.Text>
 						<Row>
-							<Col md={6}>{count}</Col>
+							<Col md={6} style={{ fontSize: "35px" }}>
+								{count}
+							</Col>
 							<Col style={{ float: "right" }} md={6}>
 								{getIcon(header)}
 							</Col>
 						</Row>
 					</Card.Text>
 				</Card.Body>
+				<Card.Footer>
+					<Link style={{ color: "white" }} to={`/admin/${header}/`}>
+						Viwe Details
+					</Link>
+				</Card.Footer>
 			</Card>
 		</div>
 	);
