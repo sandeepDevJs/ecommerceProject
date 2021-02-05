@@ -13,6 +13,10 @@ import {
 	CAT_UPDATE_SUCCESS,
 	CAT_UPDATE_FAILS,
 	CAT_UPDATE_RESET,
+	CAT_CREATE_REQUEST,
+	CAT_CREATE_SUCCESS,
+	CAT_CREATE_FAILS,
+	CAT_CREATE_RESET,
 } from "../constants/categoryConstants";
 
 export const getCatReducer = (
@@ -89,6 +93,26 @@ export const updateCatReducer = (state = {}, action) => {
 			return { loading: false, error: action.payload };
 
 		case CAT_UPDATE_RESET:
+			return {};
+		default:
+			return state;
+	}
+};
+
+export const createCatReducer = (state = {}, action) => {
+	switch (action.type) {
+		case CAT_CREATE_REQUEST:
+			return { loading: true };
+		case CAT_CREATE_SUCCESS:
+			return {
+				loading: false,
+				success: true,
+			};
+
+		case CAT_CREATE_FAILS:
+			return { loading: false, error: action.payload };
+
+		case CAT_CREATE_RESET:
 			return {};
 		default:
 			return state;

@@ -11,6 +11,9 @@ import {
 	CAT_UPDATE_REQUEST,
 	CAT_UPDATE_SUCCESS,
 	CAT_UPDATE_FAILS,
+	CAT_CREATE_REQUEST,
+	CAT_CREATE_SUCCESS,
+	CAT_CREATE_FAILS,
 } from "../constants/categoryConstants";
 import axios from "axios";
 let { token } = JSON.parse(localStorage.getItem("userInfo"));
@@ -95,6 +98,24 @@ export const updateCat = (catId, body) => async (dispatch) => {
 	} catch (err) {
 		dispatch({
 			type: CAT_UPDATE_FAILS,
+			payload:
+				err.response && err.response.data.message
+					? err.response.data.message
+					: err.message,
+		});
+	}
+};
+
+export const createCat = (body) => async (dispatch) => {
+	try {
+		dispatch({ type: CAT_CREATE_REQUEST });
+
+		await axios.post(`http://localhost:4000/api/categories/`, body, config);
+
+		dispatch({ type: CAT_CREATE_SUCCESS });
+	} catch (err) {
+		dispatch({
+			type: CAT_CREATE_FAILS,
 			payload:
 				err.response && err.response.data.message
 					? err.response.data.message

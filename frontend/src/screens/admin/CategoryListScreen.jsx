@@ -1,7 +1,12 @@
 import React, { useEffect, useRef, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Table, Button, Form, Pagination } from "react-bootstrap";
-import { fetchCats, deleteCat, updateCat } from "../../actions/categoryAction";
+import { Table, Button, Form, Pagination, Row, Col } from "react-bootstrap";
+import {
+	fetchCats,
+	deleteCat,
+	updateCat,
+	createCat,
+} from "../../actions/categoryAction";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import GlobalFilter from "../../components/GlobalFilter";
@@ -14,6 +19,7 @@ import {
 import {
 	CAT_DELETE_RESET,
 	CAT_UPDATE_RESET,
+	CAT_CREATE_RESET,
 } from "../../constants/categoryConstants";
 import { Toast } from "../../utils/sweetAlert2";
 import Swal from "sweetalert2";
@@ -65,6 +71,12 @@ const CategoryListScreen = () => {
 		success: updateCatSuccess,
 		error: updateCatError,
 	} = useSelector((state) => state.updateCat);
+
+	const {
+		loading: createCatLoading,
+		success: createCatSuccess,
+		error: createCatError,
+	} = useSelector((state) => state.createCat);
 	const dispatch = useDispatch();
 
 	useEffect(() => {
@@ -74,12 +86,16 @@ const CategoryListScreen = () => {
 		if (updateCatSuccess) {
 			dispatch({ type: CAT_UPDATE_RESET });
 		}
+		if (createCatSuccess) {
+			dispatch({ type: CAT_UPDATE_RESET });
+		}
 		dispatch(fetchCats());
-	}, [dispatch, deleteCatSuccess, updateCatSuccess]);
+	}, [dispatch, deleteCatSuccess, updateCatSuccess, createCatSuccess]);
 
 	useEffect(() => {
 		dispatch({ type: CAT_DELETE_RESET });
 		dispatch({ type: CAT_UPDATE_RESET });
+		dispatch({ type: CAT_CREATE_RESET });
 	}, [dispatch]);
 
 	const categoryColumns = useMemo(() => CATEGORY_COLUMNS.current, [
@@ -157,18 +173,55 @@ const CategoryListScreen = () => {
 		});
 	};
 
-	if (deleteCatSuccess) {
+	const createCatBtn = () => {
+		Swal.fire({
+			title: "Category Name",
+			input: "text",
+			inputAttributes: {
+				autocapitalize: "off",
+			},
+			showCancelButton: true,
+			confirmButtonText: "Create",
+			showLoaderOnConfirm: true,
+			preConfirm: (text) => {
+				if (!text.trim().length) {
+					Swal.showValidationMessage(`Required!`);
+				} else if (text.trim().length < 3) {
+					Swal.showValidationMessage(`Too Small Name!`);
+				}
+			},
+			allowOutsideClick: () => !Swal.isLoading(),
+		}).then((result) => {
+			if (result.isConfirmed) {
+				dispatch(createCat({ category: result.value }));
+			}
+		});
+	};
+
+	if (deleteCatSuccess || updateCatSuccess) {
+		let msg = deleteCatSuccess ? "deleted" : updateCatSuccess ? "updated" : "";
+
 		Toast.fire({
 			icon: "success",
-			title: "Data Deleted Successfully!",
+			title: `Data ${msg} Successfully!`,
 		});
 	}
 
-	if (updateCatSuccess) {
+	if (createCatLoading) {
+		Swal.fire({
+			title: "Creating....",
+		});
+	}
+
+	if (createCatSuccess) {
 		Toast.fire({
 			icon: "success",
-			title: "Data Updated Successfully!",
+			title: "Data Created Successfully!",
 		});
+	}
+
+	if (createCatError) {
+		Swal.close();
 	}
 
 	return (
@@ -179,9 +232,24 @@ const CategoryListScreen = () => {
 			{error && <Message variant="danger">{error}</Message>}
 			{deleteCatError && <Message variant="danger">{deleteCatError}</Message>}
 			{updateCatError && <Message variant="danger">{updateCatError}</Message>}
+			{createCatError && <Message variant="danger">{createCatError}</Message>}
 			{cats.length && (
 				<div>
-					<h1>Category List</h1>
+					<Row>
+						<Col md={9}>
+							<h1>category List</h1>
+						</Col>
+						<Col md={3}>
+							<Button
+								style={{ float: "right" }}
+								onClick={() => {
+									createCatBtn();
+								}}
+							>
+								Create Category
+							</Button>
+						</Col>
+					</Row>
 					<GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
 					<Table
 						variant="dark"

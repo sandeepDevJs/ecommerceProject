@@ -223,11 +223,25 @@ const SubcategoryListScreen = () => {
 			])
 			.then((result) => {
 				if (result.value) {
-					let body = {
-						category_id: result.value[1],
-						subcategory: result.value[0],
-					};
-					dispatch(createSubCat(body));
+					if (result.value[0].trim()) {
+						if (result.value[0].length > 3) {
+							let body = {
+								category_id: result.value[1],
+								subcategory: result.value[0],
+							};
+							dispatch(createSubCat(body));
+						} else {
+							Swal.fire({
+								title: "subcategory name is Too Small!",
+								icon: "error",
+							});
+						}
+					} else {
+						Swal.fire({
+							title: "subcategory name is required!",
+							icon: "error",
+						});
+					}
 				}
 			});
 	};
@@ -238,22 +252,32 @@ const SubcategoryListScreen = () => {
 		});
 	}
 
-	if (deleteSubCatSuccess || updateSubCatSuccess || createSubCatSuccess) {
+	if (deleteSubCatSuccess || updateSubCatSuccess) {
 		let msg = deleteSubCatSuccess
 			? "deleted"
 			: updateSubCatSuccess
 			? "updated"
-			: createSubCatSuccess
-			? "created"
 			: "";
 
 		Toast.fire({
 			icon: "success",
 			title: `Data ${msg} Successfully!`,
 		});
-		if (createSubCatSuccess) {
-			Swal.close();
-		}
+	}
+
+	if (createSubCatSuccess) {
+		Swal.close();
+	}
+
+	if (createSubCatSuccess) {
+		Toast.fire({
+			icon: "success",
+			title: "Data Created Successfully!",
+		});
+	}
+
+	if (createSubCatError) {
+		Swal.close();
 	}
 
 	return (
