@@ -2,10 +2,12 @@ import React from "react";
 import { Container } from "react-bootstrap";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import UserListScreen from "./UserListScreen";
+import DashboardScreen from "./DashboardScreen";
 import OrderDetailsScreen from "./OrderDetails";
 import SingleOrderDetailsScreen from "./SingleOrderDetails";
 import ProductListScreen from "./ProductListScreen";
 import ProductUpdateScreen from "./ProductUpdateScreen";
+import ProductCreateScreen from "./ProductCreateScreen";
 import CategoryListScreen from "./CategoryListScreen";
 import SubcategoryListScreen from "./SubcategoryListScreen";
 import SideNavs from "./SideNavs";
@@ -20,7 +22,7 @@ const AdminScreens = () => {
 				</Col>
 				<Col md={10}>
 					<Container>
-						<Route exact path="/admin" render={() => <h1>Home</h1>} />
+						<Route exact path="/admin" component={DashboardScreen} />
 						<Route exact path="/admin/users" component={UserListScreen} />
 						<Route
 							exact
@@ -37,6 +39,11 @@ const AdminScreens = () => {
 							exact
 							path="/admin/products/edit/:slug"
 							component={ProductUpdateScreen}
+						/>
+						<Route
+							exact
+							path="/admin/products/create/"
+							component={ProductCreateScreen}
 						/>
 						<Route
 							exact

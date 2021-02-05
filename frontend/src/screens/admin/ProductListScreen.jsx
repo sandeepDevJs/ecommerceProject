@@ -1,7 +1,15 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
-import { Table, Pagination, Form, Image, Button } from "react-bootstrap";
+import {
+	Table,
+	Pagination,
+	Form,
+	Image,
+	Button,
+	Row,
+	Col,
+} from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { listAllProducts, deleteProduct } from "../../actions/productActions";
 import { PRODUCT_DELETE_RESET } from "../../constants/productConstant";
@@ -177,8 +185,23 @@ const ProductListScreen = ({ history }) => {
 				<Message variant="danger">{error}</Message>
 			) : products.length ? (
 				<div>
+					<Row>
+						<Col md={9}>
+							<h1>Product List</h1>
+						</Col>
+						<Col md={3}>
+							<Button
+								style={{ float: "right" }}
+								onClick={() => {
+									history.push("/admin/products/create/");
+								}}
+							>
+								Create Product
+							</Button>
+						</Col>
+					</Row>
 					{error && <Message variant="danger">{error}</Message>}
-					{loading ? <Loader /> : <h1>Products List</h1>}
+					{loading && <Loader />}
 					{products && (
 						<div>
 							{deleteProdutError && (
