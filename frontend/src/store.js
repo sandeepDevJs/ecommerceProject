@@ -46,6 +46,12 @@ import {
 	updateCatReducer,
 } from "./reducers/categoryReducers";
 
+import {
+	getSubCatReducer,
+	deleteSubCatReducer,
+	updateSubCatReducer,
+} from "./reducers/subcategoryReducers";
+
 const reducer = combineReducers({
 	productList: productListReducer,
 	productDetails: productDetailsReducer,
@@ -70,6 +76,9 @@ const reducer = combineReducers({
 	catById: getCatsByIdReducer,
 	deleteCat: deleteCatReducer,
 	updateCat: updateCatReducer,
+	subcatList: getSubCatReducer,
+	deleteSubCat: deleteSubCatReducer,
+	updateSubCat: updateSubCatReducer,
 	updateImage: productImageUpdateReducer,
 	shippingDetails: shippingReducer,
 	orderCreate: orderCreateReducer,

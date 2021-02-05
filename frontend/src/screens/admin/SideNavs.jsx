@@ -51,6 +51,15 @@ const SideNavs = () => {
 							</Nav.Link>
 						</LinkContainer>
 					</Nav.Item>
+
+					<Nav.Item>
+						<LinkContainer exact to="/admin/subcategories">
+							<Nav.Link>
+								<i className="fas fa-store-alt px-3"></i>
+								Subcategories
+							</Nav.Link>
+						</LinkContainer>
+					</Nav.Item>
 				</Nav>
 			</Navbar>
 		</div>
