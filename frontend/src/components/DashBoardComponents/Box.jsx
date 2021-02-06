@@ -44,7 +44,7 @@ const Box = ({ key, header, title, count }) => {
 				</Card.Body>
 				<Card.Footer>
 					<Link style={{ color: "white" }} to={`/admin/${header}/`}>
-						Viwe Details
+						Viwe Details <i className="fas fa-angle-double-right"></i>
 					</Link>
 				</Card.Footer>
 			</Card>

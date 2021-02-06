@@ -13,7 +13,8 @@ import {
 	SUBCAT_CREATE_FAILS,
 } from "../constants/subcategoryConstants";
 import axios from "axios";
-let { token } = JSON.parse(localStorage.getItem("userInfo"));
+let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+let { token } = userInfo ? userInfo : { token: "" };
 let config = {
 	headers: {
 		"Content-Type": "application/json",

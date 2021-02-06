@@ -60,6 +60,15 @@ const SideNavs = () => {
 							</Nav.Link>
 						</LinkContainer>
 					</Nav.Item>
+
+					<Nav.Item>
+						<LinkContainer exact to="/admin/orders">
+							<Nav.Link>
+								<i className="fas fa-clipboard px-3"></i>
+								Orders
+							</Nav.Link>
+						</LinkContainer>
+					</Nav.Item>
 				</Nav>
 			</Navbar>
 		</div>

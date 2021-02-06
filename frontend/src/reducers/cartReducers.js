@@ -16,6 +16,7 @@ import {
 	CART_INCREMENT_ITEM_RESET,
 	CART_REMOVE_ITEM_RESET,
 	CART_ADD_ITEM_RESET,
+	CART_LIST_ITEM_RESET,
 } from "../constants/cartConstant";
 
 const shippingAddressFromLocalStorage = localStorage.getItem("shippingAddress")
@@ -48,6 +49,9 @@ export const cartListReducer = (
 
 		case CART_LIST_ITEM_FAILS:
 			return { ...state, loading: false, error: action.payload };
+
+		case CART_LIST_ITEM_RESET:
+			return {};
 
 		default:
 			return state;

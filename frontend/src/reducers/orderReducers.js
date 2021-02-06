@@ -14,6 +14,10 @@ import {
 	ORDER_LIST_MY_FAILS,
 	ORDER_LIST_MY_SUCCESS,
 	ORDER_LIST_MY_RESET,
+	ORDER_LIST_ALL_REQUEST,
+	ORDER_LIST_ALL_SUCCESS,
+	ORDER_LIST_ALL_FAILS,
+	ORDER_LIST_ALL_RESET,
 } from "../constants/orderConstant";
 
 const orderCreateFromLocalStorage = localStorage.getItem("orderCreate")
@@ -90,6 +94,25 @@ export const orderListMyReducer = (state = { orders: [] }, action) => {
 			return { loading: false, error: action.payload };
 
 		case ORDER_LIST_MY_RESET:
+			return { orders: [] };
+
+		default:
+			return state;
+	}
+};
+
+export const orderListAllReducer = (state = { orders: [] }, action) => {
+	switch (action.type) {
+		case ORDER_LIST_ALL_REQUEST:
+			return { loading: true };
+
+		case ORDER_LIST_ALL_SUCCESS:
+			return { loading: false, orders: action.payload };
+
+		case ORDER_LIST_ALL_FAILS:
+			return { loading: false, error: action.payload };
+
+		case ORDER_LIST_ALL_RESET:
 			return { orders: [] };
 
 		default:

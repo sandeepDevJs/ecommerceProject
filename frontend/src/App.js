@@ -32,7 +32,7 @@ export default function App() {
 					<Route path="/resetPassword/:token" component={ResetPasswordScreen} />
 					<Route path="/register" component={RegisterScreen} />
 					<PrivateRoute path="/profile" component={ProfileScreen} />
-					<Route path="/product/:slug" component={ProductScreen} />
+					<PrivateRoute path="/product/:slug" component={ProductScreen} />
 					<PrivateRoute path="/cart" component={CartScreen} />
 					<Route path="/search/:keyword" component={HomeScreen} exact />
 					<Route path="/page/:page" component={HomeScreen} exact />

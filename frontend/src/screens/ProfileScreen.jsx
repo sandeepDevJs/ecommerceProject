@@ -22,8 +22,7 @@ const ProfileScreen = () => {
 	const { loading: loadingOrders, error: errorOrders, orders } = orderListMy;
 
 	useEffect(() => {
-		console.log(user);
-		if (!user.name || userUpdateProfile.success) {
+		if (!user || userUpdateProfile.success) {
 			dispatch({ type: USER_PROFILE_UPDATE_RESET });
 			dispatch(getUserDetails());
 			dispatch(listMyOrder());

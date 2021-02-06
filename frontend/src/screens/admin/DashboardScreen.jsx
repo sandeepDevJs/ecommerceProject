@@ -19,6 +19,12 @@ const DashboardScreen = () => {
 		error: userError,
 	} = useSelector((state) => state.adminUserAllUser);
 
+	const {
+		orders,
+		loading: orderLoading,
+		error: orderLoadingError,
+	} = useSelector((state) => state.orderListAll);
+
 	useEffect(() => {
 		dispatch(getAllUsersList());
 		dispatch(listAllProducts());
@@ -26,12 +32,15 @@ const DashboardScreen = () => {
 
 	let userCount = userData ? userData.length : 0;
 	let productCount = products ? products.length : 0;
+	let orderCount = orders ? orders.length : 0;
 
 	return (
 		<div>
-			{(loading || userLoading) && <Loader />}
-			{(error || userError) && (
-				<Message variant="danger">{error || userError}</Message>
+			{(loading || userLoading || orderLoading) && <Loader />}
+			{(error || userError || orderLoadingError) && (
+				<Message variant="danger">
+					{error || userError || orderLoadingError}
+				</Message>
 			)}
 			<Row>
 				<Col md={4}>
@@ -46,7 +55,12 @@ const DashboardScreen = () => {
 					/>
 				</Col>
 				<Col md={4}>
-					<Box key={2} header="Orders" title="Orders Count" count="1" />
+					<Box
+						key={2}
+						header="Orders"
+						title="Orders Count"
+						count={orderCount}
+					/>
 				</Col>
 			</Row>
 		</div>

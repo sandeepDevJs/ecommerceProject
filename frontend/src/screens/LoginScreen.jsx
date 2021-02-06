@@ -96,7 +96,7 @@ const LoginScreen = ({ location, history }) => {
 							type="password"
 							className="form-control"
 							name="password"
-							placeholder="Enter Email"
+							placeholder="Enter Password"
 						/>
 						<ErrorMessage name="password">
 							{(errMsg) => <Message variant="danger">{errMsg}</Message>}

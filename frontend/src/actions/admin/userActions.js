@@ -8,7 +8,8 @@ import {
 } from "../../constants/userConstants";
 import axios from "axios";
 
-let { token } = JSON.parse(localStorage.getItem("userInfo"));
+let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+let { token } = userInfo ? userInfo : { token: "" };
 let config = {
 	headers: {
 		"Content-Type": "application/json",
