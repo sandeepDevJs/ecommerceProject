@@ -11,11 +11,15 @@ import {
 	useGlobalFilter,
 	usePagination,
 } from "react-table";
-import { listAllOrder } from "../../actions/orderActions";
+import { ORDER_DELIVERED_RESET } from "../../constants/orderConstant";
+import { listAllOrder, deliverOrder } from "../../actions/orderActions";
 import { format, parseISO } from "date-fns";
 
 const OrderListScreen = () => {
 	const { orders, loading, error } = useSelector((state) => state.orderListAll);
+	const { success, loading: deliverLoading, error: deliverError } = useSelector(
+		(state) => state.orderDeliver
+	);
 	const dispatch = useDispatch();
 
 	const ORDER_COLUMNS = useRef([
@@ -52,7 +56,7 @@ const OrderListScreen = () => {
 			Cell: ({ cell, row, value }) => {
 				let isDelivered = value;
 				return isDelivered ? (
-					format(row.values.deliveredAt, "dd/mm/yyyy")
+					format(parseISO(row.original.deliveredAt), "dd/mm/yyyy")
 				) : (
 					<Button
 						size="sm"
@@ -113,10 +117,11 @@ const OrderListScreen = () => {
 	const { globalFilter, pageIndex, pageSize } = state;
 	useEffect(() => {
 		dispatch(listAllOrder());
-	}, [dispatch]);
+		dispatch({ type: ORDER_DELIVERED_RESET });
+	}, [dispatch, success]);
 
 	const markAsDelivered = (id) => {
-		alert(id);
+		dispatch(deliverOrder(id));
 	};
 
 	console.log(orders);
@@ -124,8 +129,10 @@ const OrderListScreen = () => {
 	return (
 		<div>
 			<h1>Orders List</h1>
-			{error && <Message variant="danger">{error}</Message>}
-			{loading && <Loader />}
+			{(error || deliverError) && (
+				<Message variant="danger">{error || deliverError}</Message>
+			)}
+			{(loading || deliverLoading) && <Loader />}
 			{orders && orders.length > 0 && (
 				<div>
 					<GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />

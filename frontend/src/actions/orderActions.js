@@ -16,6 +16,10 @@ import {
 	ORDER_LIST_ALL_REQUEST,
 	ORDER_LIST_ALL_SUCCESS,
 	ORDER_LIST_ALL_FAILS,
+	ORDER_DELIVERED_REQUEST,
+	ORDER_DELIVERED_SUCCESS,
+	ORDER_DELIVERED_FAILS,
+	ORDER_DELIVERED_RESET,
 } from "../constants/orderConstant";
 
 export const creatOrder = (order) => async (dispatch, getState) => {
@@ -201,6 +205,43 @@ export const listAllOrder = () => async (dispatch, getState) => {
 	} catch (err) {
 		dispatch({
 			type: ORDER_LIST_ALL_FAILS,
+			payload:
+				err.response && err.response.data.message
+					? err.response.data.message
+					: err.message,
+		});
+	}
+};
+
+export const deliverOrder = (orderId) => async (dispatch, getState) => {
+	try {
+		dispatch({
+			type: ORDER_DELIVERED_REQUEST,
+		});
+
+		const {
+			userLogin: { userInfo },
+		} = getState();
+
+		const config = {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${userInfo.token}`,
+			},
+		};
+
+		await axios.put(
+			`http://localhost:4000/api/order/${orderId}/delivered/`,
+			{},
+			config
+		);
+
+		dispatch({ type: ORDER_DELIVERED_SUCCESS });
+		dispatch({ type: ORDER_DELIVERED_RESET });
+		localStorage.removeItem("orderCreate");
+	} catch (err) {
+		dispatch({
+			type: ORDER_DELIVERED_FAILS,
 			payload:
 				err.response && err.response.data.message
 					? err.response.data.message
