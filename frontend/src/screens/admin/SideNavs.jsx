@@ -18,35 +18,35 @@ const SideNavs = () => {
 						<LinkContainer exact to="/admin">
 							<Nav.Link>
 								<i className="fas fa-tachometer-alt px-3"></i>
+								<br />
 								Dashboard
 							</Nav.Link>
 						</LinkContainer>
-						<Dropdown.Divider />
 					</Nav.Item>
 					<Nav.Item>
 						<LinkContainer exact to="/admin/users">
 							<Nav.Link>
-								<i className="fas fa-users px-3"></i>
+								<i className="fas fa-users px-3"></i> <br />
 								Users
 							</Nav.Link>
 						</LinkContainer>
-						<Dropdown.Divider />
 					</Nav.Item>
 
 					<Nav.Item>
 						<LinkContainer exact to="/admin/products">
 							<Nav.Link>
 								<i className="fas fa-store-alt px-3"></i>
+								<br />
 								Products
 							</Nav.Link>
 						</LinkContainer>
-						<Dropdown.Divider />
 					</Nav.Item>
 
 					<Nav.Item>
 						<LinkContainer exact to="/admin/categories/">
 							<Nav.Link>
-								<i className="fas fa-store-alt px-3"></i>
+								<i className="fas fa-list-alt px-3"></i>
+								<br />
 								Categories
 							</Nav.Link>
 						</LinkContainer>
@@ -55,7 +55,8 @@ const SideNavs = () => {
 					<Nav.Item>
 						<LinkContainer exact to="/admin/subcategories">
 							<Nav.Link>
-								<i className="fas fa-store-alt px-3"></i>
+								<i className="fas fa-list-alt px-3"></i>
+								<br />
 								Subcategories
 							</Nav.Link>
 						</LinkContainer>
@@ -65,6 +66,7 @@ const SideNavs = () => {
 						<LinkContainer exact to="/admin/orders">
 							<Nav.Link>
 								<i className="fas fa-clipboard px-3"></i>
+								<br />
 								Orders
 							</Nav.Link>
 						</LinkContainer>

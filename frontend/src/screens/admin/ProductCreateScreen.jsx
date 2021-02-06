@@ -264,7 +264,7 @@ const ProductCreateScreen = ({ history }) => {
 									</FormGroup>
 								</Col>
 							</Row>
-							<Button type="submit">Update</Button>
+							<Button type="submit">Create</Button>
 						</Col>
 					</Row>
 				</Form>
