@@ -31,7 +31,7 @@ const OrderListScreen = () => {
 			Header: "Ordered At",
 			accessor: "createdAt",
 			Cell: ({ cell }) =>
-				format(parseISO(cell.row.values.createdAt.toString()), "dd/MM/yyyy"),
+				format(parseISO(cell.row.values.createdAt), "dd/MM/yyyy"),
 		},
 		{
 			Header: "Total Amount",
@@ -56,7 +56,7 @@ const OrderListScreen = () => {
 			Cell: ({ cell, row, value }) => {
 				let isDelivered = value;
 				return isDelivered ? (
-					format(parseISO(row.original.deliveredAt), "dd/mm/yyyy")
+					format(parseISO(row.original.deliveredAt), "dd/MM/yyyy")
 				) : (
 					<Button
 						size="sm"

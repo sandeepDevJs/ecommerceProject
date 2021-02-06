@@ -87,7 +87,7 @@ const CategoryListScreen = () => {
 			dispatch({ type: CAT_UPDATE_RESET });
 		}
 		if (createCatSuccess) {
-			dispatch({ type: CAT_UPDATE_RESET });
+			dispatch({ type: CAT_CREATE_RESET });
 		}
 		dispatch(fetchCats());
 	}, [dispatch, deleteCatSuccess, updateCatSuccess, createCatSuccess]);
