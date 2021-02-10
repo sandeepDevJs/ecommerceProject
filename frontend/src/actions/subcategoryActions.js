@@ -13,18 +13,18 @@ import {
 	SUBCAT_CREATE_FAILS,
 } from "../constants/subcategoryConstants";
 import axios from "axios";
-let userInfo = JSON.parse(localStorage.getItem("userInfo"));
-let { token } = userInfo ? userInfo : { token: "" };
-let config = {
-	headers: {
-		"Content-Type": "application/json",
-		Authorization: `Bearer ${token}`,
-	},
-};
 
 export const fetchSubCats = () => async (dispatch, getState) => {
 	try {
 		dispatch({ type: SUBCAT_FETCH_REQUEST });
+		let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+		let { token } = userInfo ? userInfo : { token: "" };
+		let config = {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		};
 
 		let { data } = await axios.get(
 			`http://localhost:4000/api/subcategories/`,
@@ -46,6 +46,14 @@ export const fetchSubCats = () => async (dispatch, getState) => {
 export const deleteSubCat = (subcatId) => async (dispatch) => {
 	try {
 		dispatch({ type: SUBCAT_DELETE_REQUEST });
+		let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+		let { token } = userInfo ? userInfo : { token: "" };
+		let config = {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		};
 
 		await axios.delete(
 			`http://localhost:4000/api/subcategories/${subcatId}`,
@@ -67,6 +75,14 @@ export const deleteSubCat = (subcatId) => async (dispatch) => {
 export const updateSubCat = (subcatId, body) => async (dispatch) => {
 	try {
 		dispatch({ type: SUBCAT_UPDATE_REQUEST });
+		let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+		let { token } = userInfo ? userInfo : { token: "" };
+		let config = {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		};
 
 		await axios.put(
 			`http://localhost:4000/api/subcategories/${subcatId}`,
@@ -89,6 +105,14 @@ export const updateSubCat = (subcatId, body) => async (dispatch) => {
 export const createSubCat = (body) => async (dispatch) => {
 	try {
 		dispatch({ type: SUBCAT_CREATE_REQUEST });
+		let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+		let { token } = userInfo ? userInfo : { token: "" };
+		let config = {
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${token}`,
+			},
+		};
 
 		await axios.post(`http://localhost:4000/api/subcategories/`, body, config);
 

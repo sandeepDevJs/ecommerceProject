@@ -16,16 +16,17 @@ import {
 	CAT_CREATE_FAILS,
 } from "../constants/categoryConstants";
 import axios from "axios";
-let userInfo = JSON.parse(localStorage.getItem("userInfo"));
-let { token } = userInfo ? userInfo : { token: "" };
-let config = {
-	headers: {
-		"Content-Type": "application/json",
-		Authorization: `Bearer ${token}`,
-	},
-};
 
 export const fetchCats = () => async (dispatch, getState) => {
+	let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+	let { token } = userInfo ? userInfo : { token: "" };
+	let config = {
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
 	try {
 		dispatch({ type: CAT_FETCH_REQUEST });
 
@@ -47,6 +48,15 @@ export const fetchCats = () => async (dispatch, getState) => {
 };
 
 export const fetchCatsByIds = (catId) => async (dispatch) => {
+	let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+	let { token } = userInfo ? userInfo : { token: "" };
+	let config = {
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
 	try {
 		dispatch({ type: CAT_FETCH_BY_ID_REQUEST });
 
@@ -68,6 +78,15 @@ export const fetchCatsByIds = (catId) => async (dispatch) => {
 };
 
 export const deleteCat = (catId) => async (dispatch) => {
+	let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+	let { token } = userInfo ? userInfo : { token: "" };
+	let config = {
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
 	try {
 		dispatch({ type: CAT_DELETE_REQUEST });
 
@@ -86,6 +105,15 @@ export const deleteCat = (catId) => async (dispatch) => {
 };
 
 export const updateCat = (catId, body) => async (dispatch) => {
+	let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+	let { token } = userInfo ? userInfo : { token: "" };
+	let config = {
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
 	try {
 		dispatch({ type: CAT_UPDATE_REQUEST });
 
@@ -108,6 +136,15 @@ export const updateCat = (catId, body) => async (dispatch) => {
 };
 
 export const createCat = (body) => async (dispatch) => {
+	let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+	let { token } = userInfo ? userInfo : { token: "" };
+	let config = {
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${token}`,
+		},
+	};
+
 	try {
 		dispatch({ type: CAT_CREATE_REQUEST });
 

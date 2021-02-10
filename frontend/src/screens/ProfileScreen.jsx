@@ -22,25 +22,21 @@ const ProfileScreen = () => {
 	const { loading: loadingOrders, error: errorOrders, orders } = orderListMy;
 
 	useEffect(() => {
-		if (!user || userUpdateProfile.success) {
+		if (userUpdateProfile.success) {
 			dispatch({ type: USER_PROFILE_UPDATE_RESET });
-			dispatch(getUserDetails());
-			dispatch(listMyOrder());
-		} else {
-			setName(user.name);
-			setEmail(user.email);
 		}
-	}, [dispatch, user, userUpdateProfile]);
+		dispatch(getUserDetails());
+		dispatch(listMyOrder());
+	}, [dispatch, userUpdateProfile]);
 
 	const onSubmitHandler = (e) => {
 		e.preventDefault();
 		let data = {
-			name,
-			email,
+			name : name ? name : user.name,
+			email : email ? email : user.email,
 		};
 		dispatch(updateUserProfile(data));
 	};
-
 	return (
 		<Row>
 			<Col md={3}>
@@ -59,7 +55,7 @@ const ProfileScreen = () => {
 						<Form.Control
 							type="text"
 							placeholder="Enter Name"
-							value={name}
+							value={name ? name : user ? user.name : ""}
 							onChange={(e) => setName(e.target.value)}
 						/>
 					</Form.Group>
@@ -68,7 +64,7 @@ const ProfileScreen = () => {
 						<Form.Control
 							type="email"
 							placeholder="Enter Email"
-							value={email}
+							value={email ? email : user ? user.email : ""}
 							onChange={(e) => setEmail(e.target.value)}
 						/>
 					</Form.Group>

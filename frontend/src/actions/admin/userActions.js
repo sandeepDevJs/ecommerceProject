@@ -8,19 +8,19 @@ import {
 } from "../../constants/userConstants";
 import axios from "axios";
 
-let userInfo = JSON.parse(localStorage.getItem("userInfo"));
-let { token } = userInfo ? userInfo : { token: "" };
-let config = {
-	headers: {
-		"Content-Type": "application/json",
-		Authorization: `Bearer ${token}`,
-	},
-};
-
 export const getAllUsersList = () => async (dispatch) => {
+	let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+	let { token } = userInfo ? userInfo : { token: "" };
+	let config = {
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${token}`,
+		},
+	};
 	try {
 		dispatch({ type: USER_ALL_USERS_REQUEST });
 
+		console.log("token", token);
 		let { data } = await axios.get("http://localhost:4000/api/users", config);
 
 		dispatch({ type: USER_ALL_USERS_SUCCESS, payload: data.data });
@@ -36,6 +36,14 @@ export const getAllUsersList = () => async (dispatch) => {
 };
 
 export const getAllOrderDetailsListById = (userId) => async (dispatch) => {
+	let userInfo = JSON.parse(localStorage.getItem("userInfo"));
+	let { token } = userInfo ? userInfo : { token: "" };
+	let config = {
+		headers: {
+			"Content-Type": "application/json",
+			Authorization: `Bearer ${token}`,
+		},
+	};
 	try {
 		dispatch({ type: USER_ORDER_DETAILS_BY_ID_REQUEST });
 

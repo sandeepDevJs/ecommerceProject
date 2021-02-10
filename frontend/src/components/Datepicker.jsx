@@ -4,7 +4,6 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Field, ErrorMessage } from "formik";
 import { FormGroup, FormLabel } from "react-bootstrap";
 import Message from "../components/Message";
-import DatePicker from "react-date-picker";
 const Datepicker = (props) => {
 	const { label, name, ...rest } = props;
 	return (
