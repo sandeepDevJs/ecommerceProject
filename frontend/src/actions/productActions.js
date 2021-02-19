@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
 	PRODUCT_LIST_REQUEST,
 	PRODUCT_LIST_SUCCESS,
@@ -29,12 +28,22 @@ import {
 	PRODUCT_CREATE_FAILS,
 } from "../constants/productConstant";
 
+import {
+	getProductsApi,
+	listProductDetailsApi,
+	listTopProductsApi,
+	createProductReviewApi,
+	listAllProductsApi,
+	deleteProductApi,
+	updateProductApi,
+	updateImageProductApi,
+	createProductApi,
+} from "../apis/products";
+
 export const listProducts = (keyword = "", page = 0) => async (dispatch) => {
 	try {
 		dispatch({ type: PRODUCT_LIST_REQUEST });
-		const { data } = await axios.get(
-			`http://localhost:4000/api/products?limit=3&keyword=${keyword}&page=${page}`
-		);
+		const { data } = await getProductsApi(keyword, page);
 		dispatch({
 			type: PRODUCT_LIST_SUCCESS,
 			payload: data,
@@ -53,9 +62,7 @@ export const listProducts = (keyword = "", page = 0) => async (dispatch) => {
 export const listProductDetails = (slug) => async (dispatch) => {
 	try {
 		dispatch({ type: PRODUCT_DETAILS_REQUEST });
-		const { data } = await axios.get(
-			`http://localhost:4000/api/products?slug=${slug}`
-		);
+		const { data } = await listProductDetailsApi(slug);
 		dispatch({
 			type: PRODUCT_DETAILS_SUCCESS,
 			payload: data.data[0],
@@ -88,11 +95,7 @@ export const createProductReview = (productId, review) => async (
 				Authorization: `Bearer ${userInfo.token}`,
 			},
 		};
-		await axios.post(
-			`http://localhost:4000/api/reviews/product/${productId}`,
-			review,
-			config
-		);
+		await createProductReviewApi(productId, review, config);
 		dispatch({
 			type: PRODUCT_CREATE_REVIEW_SUCCESS,
 		});
@@ -110,9 +113,7 @@ export const createProductReview = (productId, review) => async (
 export const listTopProducts = () => async (dispatch) => {
 	try {
 		dispatch({ type: PRODUCT_TOP_REQUEST });
-		const { data } = await axios.get(
-			`http://localhost:4000/api/products/topProducts`
-		);
+		const { data } = await listTopProductsApi();
 		dispatch({
 			type: PRODUCT_TOP_SUCCESS,
 			payload: data.data,
@@ -131,9 +132,7 @@ export const listTopProducts = () => async (dispatch) => {
 export const listAllProducts = () => async (dispatch) => {
 	try {
 		dispatch({ type: PRODUCT_ALL_LIST_REQUEST });
-		const { data } = await axios.get(
-			`http://localhost:4000/api/products?limit=100`
-		);
+		const { data } = await listAllProductsApi();
 		dispatch({
 			type: PRODUCT_ALL_LIST_SUCCESS,
 			payload: data.data,
@@ -162,10 +161,7 @@ export const deleteProduct = (pid) => async (dispatch, getState) => {
 		},
 	};
 	try {
-		const { data } = await axios.delete(
-			`http://localhost:4000/api/products/${pid}`,
-			config
-		);
+		const { data } = await deleteProductApi(pid, config);
 		dispatch({
 			type: PRODUCT_DELETE_SUCCESS,
 			payload: data.data,
@@ -194,7 +190,7 @@ export const updateProduct = (pid, fdata) => async (dispatch, getState) => {
 		},
 	};
 	try {
-		await axios.put(`http://localhost:4000/api/products/${pid}`, fdata, config);
+		await updateProductApi(pid, fdata, config);
 		dispatch({
 			type: PRODUCT_UPDATE_SUCCESS,
 		});
@@ -225,11 +221,7 @@ export const updateImageProduct = (pid, fdata) => async (
 		},
 	};
 	try {
-		await axios.put(
-			`http://localhost:4000/api/products/updateImage/${pid}`,
-			fdata,
-			config
-		);
+		await updateImageProductApi(pid, fdata, config);
 		dispatch({
 			type: PRODUCT_IMAGE_UPDATE_SUCCESS,
 		});
@@ -257,7 +249,7 @@ export const createProduct = (body) => async (dispatch, getState) => {
 		},
 	};
 	try {
-		await axios.post(`http://localhost:4000/api/products/`, body, config);
+		await createProductApi(body, config);
 		dispatch({
 			type: PRODUCT_CREATE_SUCCESS,
 		});

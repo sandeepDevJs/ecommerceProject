@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
 	CART_LIST_ITEM_REQUEST,
 	CART_LIST_ITEM_SUCCESS,
@@ -15,6 +14,13 @@ import {
 	CART_SAVE_SHIPPING_ADDRESS,
 	CART_SAVE_PAYMENT_METHOD,
 } from "../constants/cartConstant";
+
+import {
+	listCartApi,
+	incrementCartApi,
+	AddToCartApi,
+	removeFromCartApi,
+} from "../apis/cart";
 
 export const listCart = () => async (dispatch, getState) => {
 	try {
@@ -35,7 +41,7 @@ export const listCart = () => async (dispatch, getState) => {
 			},
 		};
 
-		const { data } = await axios.get(`http://localhost:4000/api/carts`, config);
+		const { data } = await listCartApi(config);
 
 		if (!data.data || data.data === null) {
 			throw Error("Empty Cart");
@@ -75,19 +81,7 @@ export const incrementCart = (productId, op = "increment") => async (
 			},
 		};
 
-		if (op === "increment") {
-			await axios.put(
-				`http://localhost:4000/api/carts/${productId}`,
-				{},
-				config
-			);
-		} else if (op === "decrement") {
-			await axios.put(
-				`http://localhost:4000/api/carts/${productId}?decrement=1`,
-				{},
-				config
-			);
-		}
+		await incrementCartApi(productId, op, config);
 
 		dispatch({ type: CART_INCREMENT_ITEM_SUCCESS });
 	} catch (err) {
@@ -115,11 +109,7 @@ export const AddToCart = (productId, qty = 1) => async (dispatch, getState) => {
 			},
 		};
 
-		await axios.post(
-			`http://localhost:4000/api/carts/${productId}?quantity=${qty}`,
-			{},
-			config
-		);
+		await AddToCartApi(productId, qty, config);
 
 		dispatch({ type: CART_ADD_ITEM_SUCCESS });
 	} catch (err) {
@@ -147,7 +137,7 @@ export const removeFromCart = (pid) => async (dispatch, getState) => {
 	};
 
 	try {
-		await axios.delete(`http://localhost:4000/api/carts/${pid}`, config);
+		await removeFromCartApi(pid, config);
 		dispatch({ type: CART_REMOVE_ITEM_SUCCESS });
 	} catch (err) {
 		dispatch({
