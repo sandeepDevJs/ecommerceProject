@@ -7,6 +7,7 @@
 ## Tools & Lib Used
 
 - Redux
+- React Context API
 - React Redux
 - React Helmet
 - React Table
