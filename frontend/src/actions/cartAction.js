@@ -102,6 +102,10 @@ export const AddToCart = (productId, qty = 1) => async (dispatch, getState) => {
 			userLogin: { userInfo },
 		} = getState();
 
+		if (!userInfo) {
+			throw Error("You're Not Logged In!!");
+		}
+
 		const config = {
 			headers: {
 				"Content-Type": "application/json",
