@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_PREFIX } from "../utils/apiConstants";
 import {
 	USER_DETAILS_FAILS,
 	USER_DETAILS_REQUEST,
@@ -40,7 +41,7 @@ export const login = (email, password) => async (dispatch) => {
 		};
 
 		const { data } = await axios.post(
-			"http://localhost:4000/api/auth/login",
+			`${API_PREFIX}auth/login`,
 			{ email, password },
 			config
 		);
@@ -86,7 +87,7 @@ export const register = (userData) => async (dispatch) => {
 		};
 
 		const { data } = await axios.post(
-			"http://localhost:4000/api/users",
+			`${API_PREFIX}users`,
 			{ ...userData },
 			config
 		);
@@ -130,7 +131,7 @@ export const getUserDetails = () => async (dispatch, getState) => {
 			},
 		};
 
-		const { data } = await axios.get("http://localhost:4000/api/me", config);
+		const { data } = await axios.get(`${API_PREFIX}me`, config);
 		dispatch({
 			type: USER_DETAILS_SUCCESS,
 			payload: data.data,
@@ -164,7 +165,7 @@ export const updateUserProfile = (userData) => async (dispatch, getState) => {
 		};
 
 		const { data } = await axios.put(
-			"http://localhost:4000/api/me",
+			`${API_PREFIX}me`,
 			{ ...userData },
 			config
 		);
@@ -199,11 +200,7 @@ export const forgotPassword = (email) => async (dispatch) => {
 	};
 
 	try {
-		await axios.post(
-			"http://localhost:4000/api/auth/forgotPassword",
-			{ email },
-			config
-		);
+		await axios.post(`${API_PREFIX}auth/forgotPassword`, { email }, config);
 
 		dispatch({ type: USER_FORGOT_PASS_SUCCESS });
 	} catch (err) {
@@ -229,7 +226,7 @@ export const resetPassword = (token, password) => async (dispatch) => {
 
 	try {
 		await axios.put(
-			`http://localhost:4000/api/auth/resetPassword/${token}`,
+			`${API_PREFIX}auth/resetPassword/${token}`,
 			{ password },
 			config
 		);

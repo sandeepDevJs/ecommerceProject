@@ -1,3 +1,4 @@
+import { API_PREFIX } from "../../utils/apiConstants";
 import {
 	USER_ALL_USERS_FAILS,
 	USER_ALL_USERS_REQUEST,
@@ -21,7 +22,7 @@ export const getAllUsersList = () => async (dispatch) => {
 		dispatch({ type: USER_ALL_USERS_REQUEST });
 
 		console.log("token", token);
-		let { data } = await axios.get("http://localhost:4000/api/users", config);
+		let { data } = await axios.get(`${API_PREFIX}users`, config);
 
 		dispatch({ type: USER_ALL_USERS_SUCCESS, payload: data.data });
 	} catch (err) {
@@ -48,7 +49,7 @@ export const getAllOrderDetailsListById = (userId) => async (dispatch) => {
 		dispatch({ type: USER_ORDER_DETAILS_BY_ID_REQUEST });
 
 		let { data } = await axios.get(
-			`http://localhost:4000/api/order/${userId}/orders`,
+			`${API_PREFIX}order/${userId}/orders`,
 			config
 		);
 

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { API_PREFIX } from "../utils/apiConstants";
 import {
 	ORDER_CREATE_FAILS,
 	ORDER_CREATE_REQUEST,
@@ -40,7 +41,7 @@ export const creatOrder = (order) => async (dispatch, getState) => {
 		};
 
 		const { data } = await axios.post(
-			"http://localhost:4000/api/order",
+			`${API_PREFIX}order`,
 			{ ...order },
 			config
 		);
@@ -81,10 +82,7 @@ export const getOrderDetails = (orderId) => async (dispatch, getState) => {
 			},
 		};
 
-		const { data } = await axios.get(
-			`http://localhost:4000/api/order/${orderId}`,
-			config
-		);
+		const { data } = await axios.get(`${API_PREFIX}order/${orderId}`, config);
 
 		dispatch({
 			type: ORDER_DETAILS_SUCCESS,
@@ -118,11 +116,7 @@ export const payOrder = (orderId) => async (dispatch, getState) => {
 			},
 		};
 
-		await axios.put(
-			`http://localhost:4000/api/order/${orderId}/pay`,
-			{},
-			config
-		);
+		await axios.put(`${API_PREFIX}order/${orderId}/pay`, {}, config);
 
 		dispatch({ type: ORDER_PAY_SUCCESS });
 		dispatch({ type: ORDER_CREATE_RESET });
@@ -154,10 +148,7 @@ export const listMyOrder = () => async (dispatch, getState) => {
 			},
 		};
 
-		const { data } = await axios.get(
-			"http://localhost:4000/api/order/myorders",
-			config
-		);
+		const { data } = await axios.get(`${API_PREFIX}order/myorders`, config);
 
 		dispatch({
 			type: ORDER_LIST_MY_SUCCESS,
@@ -191,10 +182,7 @@ export const listAllOrder = () => async (dispatch, getState) => {
 			},
 		};
 
-		const { data } = await axios.get(
-			"http://localhost:4000/api/order/",
-			config
-		);
+		const { data } = await axios.get(`${API_PREFIX}order/`, config);
 
 		dispatch({
 			type: ORDER_LIST_ALL_SUCCESS,
@@ -230,11 +218,7 @@ export const deliverOrder = (orderId) => async (dispatch, getState) => {
 			},
 		};
 
-		await axios.put(
-			`http://localhost:4000/api/order/${orderId}/delivered/`,
-			{},
-			config
-		);
+		await axios.put(`${API_PREFIX}order/${orderId}/delivered/`, {}, config);
 
 		dispatch({ type: ORDER_DELIVERED_SUCCESS });
 		dispatch({ type: ORDER_DELIVERED_RESET });

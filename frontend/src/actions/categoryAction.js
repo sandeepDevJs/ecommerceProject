@@ -1,3 +1,4 @@
+import { API_PREFIX } from "../utils/apiConstants";
 import {
 	CAT_FETCH_BY_ID_SUCCESS,
 	CAT_FETCH_BY_ID_REQUEST,
@@ -30,10 +31,7 @@ export const fetchCats = () => async (dispatch, getState) => {
 	try {
 		dispatch({ type: CAT_FETCH_REQUEST });
 
-		let { data } = await axios.get(
-			`http://localhost:4000/api/categories/`,
-			config
-		);
+		let { data } = await axios.get(`${API_PREFIX}categories/`, config);
 
 		dispatch({ type: CAT_FETCH_SUCCESS, payload: data.data });
 	} catch (err) {
@@ -60,10 +58,7 @@ export const fetchCatsByIds = (catId) => async (dispatch) => {
 	try {
 		dispatch({ type: CAT_FETCH_BY_ID_REQUEST });
 
-		let { data } = await axios.get(
-			`http://localhost:4000/api/categories/${catId}`,
-			config
-		);
+		let { data } = await axios.get(`${API_PREFIX}categories/${catId}`, config);
 
 		dispatch({ type: CAT_FETCH_BY_ID_SUCCESS, payload: data.data });
 	} catch (err) {
@@ -90,7 +85,7 @@ export const deleteCat = (catId) => async (dispatch) => {
 	try {
 		dispatch({ type: CAT_DELETE_REQUEST });
 
-		await axios.delete(`http://localhost:4000/api/categories/${catId}`, config);
+		await axios.delete(`${API_PREFIX}categories/${catId}`, config);
 
 		dispatch({ type: CAT_DELETE_SUCCESS });
 	} catch (err) {
@@ -117,11 +112,7 @@ export const updateCat = (catId, body) => async (dispatch) => {
 	try {
 		dispatch({ type: CAT_UPDATE_REQUEST });
 
-		await axios.put(
-			`http://localhost:4000/api/categories/${catId}`,
-			body,
-			config
-		);
+		await axios.put(`${API_PREFIX}categories/${catId}`, body, config);
 
 		dispatch({ type: CAT_UPDATE_SUCCESS });
 	} catch (err) {
@@ -148,7 +139,7 @@ export const createCat = (body) => async (dispatch) => {
 	try {
 		dispatch({ type: CAT_CREATE_REQUEST });
 
-		await axios.post(`http://localhost:4000/api/categories/`, body, config);
+		await axios.post(`${API_PREFIX}categories/`, body, config);
 
 		dispatch({ type: CAT_CREATE_SUCCESS });
 	} catch (err) {

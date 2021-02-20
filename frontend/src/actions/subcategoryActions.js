@@ -1,3 +1,4 @@
+import { API_PREFIX } from "../utils/apiConstants";
 import {
 	SUBCAT_FETCH_FAILS,
 	SUBCAT_FETCH_REQUEST,
@@ -26,10 +27,7 @@ export const fetchSubCats = () => async (dispatch, getState) => {
 			},
 		};
 
-		let { data } = await axios.get(
-			`http://localhost:4000/api/subcategories/`,
-			config
-		);
+		let { data } = await axios.get(`${API_PREFIX}subcategories/`, config);
 
 		dispatch({ type: SUBCAT_FETCH_SUCCESS, payload: data.data });
 	} catch (err) {
@@ -55,10 +53,7 @@ export const deleteSubCat = (subcatId) => async (dispatch) => {
 			},
 		};
 
-		await axios.delete(
-			`http://localhost:4000/api/subcategories/${subcatId}`,
-			config
-		);
+		await axios.delete(`${API_PREFIX}subcategories/${subcatId}`, config);
 
 		dispatch({ type: SUBCAT_DELETE_SUCCESS });
 	} catch (err) {
@@ -84,11 +79,7 @@ export const updateSubCat = (subcatId, body) => async (dispatch) => {
 			},
 		};
 
-		await axios.put(
-			`http://localhost:4000/api/subcategories/${subcatId}`,
-			body,
-			config
-		);
+		await axios.put(`${API_PREFIX}subcategories/${subcatId}`, body, config);
 
 		dispatch({ type: SUBCAT_UPDATE_SUCCESS });
 	} catch (err) {
@@ -114,7 +105,7 @@ export const createSubCat = (body) => async (dispatch) => {
 			},
 		};
 
-		await axios.post(`http://localhost:4000/api/subcategories/`, body, config);
+		await axios.post(`${API_PREFIX}subcategories/`, body, config);
 
 		dispatch({ type: SUBCAT_CREATE_SUCCESS });
 	} catch (err) {
