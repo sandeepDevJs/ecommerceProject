@@ -16,6 +16,7 @@
 - React Router Bootstrap
 - Sweet Alert 2
 - Hooks
+- redux-devtools-extension
 
 ## usage
 
