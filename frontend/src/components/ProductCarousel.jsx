@@ -5,6 +5,7 @@ import { Carousel, Image } from "react-bootstrap";
 import { listTopProducts } from "../actions/productActions";
 import Loader from "./Loader";
 import Message from "./Message";
+import { API_PREFIX } from "../utils/apiConstants";
 
 const ProductCarousel = () => {
 	const dispatch = useDispatch();
@@ -28,7 +29,10 @@ const ProductCarousel = () => {
 					<Link to={`/product/${product.slug}`}>
 						<Image
 							className="d-block"
-							src={product.product_image}
+							src={product.product_image.replace(
+								"https://ecommercecartitapi.herokuapp.com/api/",
+								API_PREFIX
+							)}
 							alt={product.title}
 							fluid
 						/>

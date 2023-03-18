@@ -22,6 +22,7 @@ import {
 import GlobalFilter from "../../components/GlobalFilter";
 import { Toast } from "../../utils/sweetAlert2";
 import Swal from "sweetalert2";
+import { API_PREFIX } from "../../utils/apiConstants";
 
 const ProductListScreen = ({ history }) => {
 	const dispatch = useDispatch();
@@ -79,7 +80,10 @@ const ProductListScreen = ({ history }) => {
 			filterable: false,
 			Cell: ({ cell }) => (
 				<Image
-					src={cell.row.values.product_image}
+					src={cell.row.values.product_image?.replace(
+						"https://ecommercecartitapi.herokuapp.com/api/",
+						API_PREFIX
+					)}
 					alt={cell.row.values.title}
 					fluid
 					rounded
@@ -123,8 +127,7 @@ const ProductListScreen = ({ history }) => {
 				<Button
 					size="sm"
 					variant="success"
-					onClick={() => handleClick(cell.row.values.slug)}
-				>
+					onClick={() => handleClick(cell.row.values.slug)}>
 					<i className="fas fa-edit"></i>
 				</Button>
 			),
@@ -137,8 +140,7 @@ const ProductListScreen = ({ history }) => {
 					type="button"
 					size="sm"
 					variant="danger"
-					onClick={() => deleteProductOnClick(cell.row.values._id)}
-				>
+					onClick={() => deleteProductOnClick(cell.row.values._id)}>
 					<i className="fas fa-trash-alt"></i>
 				</Button>
 			),
@@ -194,8 +196,7 @@ const ProductListScreen = ({ history }) => {
 								style={{ float: "right" }}
 								onClick={() => {
 									history.push("/admin/products/create/");
-								}}
-							>
+								}}>
 								Create Product
 							</Button>
 						</Col>
@@ -216,8 +217,7 @@ const ProductListScreen = ({ history }) => {
 								hover
 								responsive
 								className="table-sm"
-								{...getTableProps()}
-							>
+								{...getTableProps()}>
 								<thead>
 									{headerGroups.map((headerGroup) => (
 										<tr {...headerGroup.getHeaderGroupProps()}>
@@ -225,8 +225,7 @@ const ProductListScreen = ({ history }) => {
 												<th
 													{...column.getHeaderProps(
 														column.getSortByToggleProps()
-													)}
-												>
+													)}>
 													{" "}
 													{column.render("Header")}{" "}
 													<span>
@@ -275,8 +274,7 @@ const ProductListScreen = ({ history }) => {
 										style={{ paddingTop: "0px", margin: "0px" }}
 										as="select"
 										value={pageSize}
-										onChange={(e) => setPageSize(parseInt(e.target.value))}
-									>
+										onChange={(e) => setPageSize(parseInt(e.target.value))}>
 										{[3, 6, 9].map((pSize) => (
 											<option key={pSize} value={pSize}>
 												show {pSize}
@@ -286,26 +284,22 @@ const ProductListScreen = ({ history }) => {
 								</Form.Group>
 								<Pagination.Item
 									onClick={() => gotoPage(0)}
-									disabled={!canPreviousPage}
-								>
+									disabled={!canPreviousPage}>
 									<i className="fas fa-angle-double-left"></i>
 								</Pagination.Item>
 								<Pagination.Item
 									onClick={() => previousPage()}
-									disabled={!canPreviousPage}
-								>
+									disabled={!canPreviousPage}>
 									<i className="fas fa-caret-square-left"></i>
 								</Pagination.Item>
 								<Pagination.Item
 									onClick={() => nextPage()}
-									disabled={!canNextPage}
-								>
+									disabled={!canNextPage}>
 									<i className="fas fa-caret-square-right"></i>
 								</Pagination.Item>
 								<Pagination.Item
 									onClick={() => gotoPage(pageCount - 1)}
-									disabled={!canNextPage}
-								>
+									disabled={!canNextPage}>
 									<i className="fas fa-angle-double-right"></i>
 								</Pagination.Item>
 							</Pagination>

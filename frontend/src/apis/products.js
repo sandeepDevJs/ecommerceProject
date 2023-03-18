@@ -23,7 +23,7 @@ export const createProductReviewApi = (productId, review, config) => {
 	);
 };
 
-export const listAllProductsApi = (limit) => {
+export const listAllProductsApi = (limit = 100) => {
 	return axios.get(`${API_PREFIX}products?limit=${limit}`);
 };
 

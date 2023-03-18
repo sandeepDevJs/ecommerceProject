@@ -2,12 +2,19 @@ import React from "react";
 import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Rating from "./Rating";
+import { API_PREFIX } from "../utils/apiConstants";
 
 const Product = ({ product }) => {
 	return (
 		<Card className="my-3 p-3 rounded">
 			<Link to={`/product/${product.slug}`}>
-				<Card.Img src={product.product_image} variant="top" />
+				<Card.Img
+					src={product.product_image?.replace(
+						"https://ecommercecartitapi.herokuapp.com/api/",
+						API_PREFIX
+					)}
+					variant="top"
+				/>
 			</Link>
 			<Card.Body>
 				<Link to={`/product/${product.slug}`}>

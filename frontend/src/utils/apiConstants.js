@@ -1,1 +1,1 @@
-export const API_PREFIX = "https://ecommercecartitapi.herokuapp.com/api/";
+export const API_PREFIX = "http://localhost:4000/api/";

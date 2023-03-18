@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getOrderDetails } from "../../actions/orderActions";
 import Loader from "../../components/Loader";
 import Message from "../../components/Message";
+import { API_PREFIX } from "../../utils/apiConstants";
 
 const OrderCompleteDetails = ({ match }) => {
 	const dispatch = useDispatch();
@@ -74,7 +75,10 @@ const OrderCompleteDetails = ({ match }) => {
 												<Row>
 													<Col md={1}>
 														<Image
-															src={item.productId.product_image}
+															src={item.productId.product_image?.replace(
+																"https://ecommercecartitapi.herokuapp.com/api/",
+																API_PREFIX
+															)}
 															fluid
 															rounded
 														/>

@@ -11,6 +11,7 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { incrementCart, removeFromCart } from "../actions/cartAction";
+import { API_PREFIX } from "../utils/apiConstants";
 
 const CartProduct = ({ item }) => {
 	const dispatch = useDispatch();
@@ -33,7 +34,10 @@ const CartProduct = ({ item }) => {
 			<Row>
 				<Col md={2}>
 					<Image
-						src={item.productId.product_image}
+						src={item.productId.product_image?.replace(
+							"https://ecommercecartitapi.herokuapp.com/api/",
+							API_PREFIX
+						)}
 						alt={item.productId.title}
 						fluid
 						rounded
@@ -53,8 +57,7 @@ const CartProduct = ({ item }) => {
 									variant="outline-secondary"
 									onClick={() =>
 										handleQtyButton("increment", item.productId._id)
-									}
-								>
+									}>
 									+
 								</Button>
 							</InputGroup.Prepend>
@@ -64,8 +67,7 @@ const CartProduct = ({ item }) => {
 									variant="outline-secondary"
 									onClick={() =>
 										handleQtyButton("decrement", item.productId._id)
-									}
-								>
+									}>
 									-
 								</Button>
 							</InputGroup.Append>
@@ -73,8 +75,7 @@ const CartProduct = ({ item }) => {
 								<Button
 									variant="outline-secondary"
 									className="btn-danger"
-									onClick={removeFromCartHandler}
-								>
+									onClick={removeFromCartHandler}>
 									<i className="fas fa-trash"></i>
 								</Button>
 							</InputGroup.Append>
